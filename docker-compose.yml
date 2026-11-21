@@ -1,0 +1,9 @@
+services:
+  reallanding:
+    build: .
+    container_name: reallanding-web
+    ports:
+      - "${PORT:-8080}:80"
+    volumes:
+      - ./downloads:/usr/share/nginx/html/downloads:ro
+    restart: unless-stopped

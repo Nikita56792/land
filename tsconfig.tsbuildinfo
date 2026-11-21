@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/components/appsview.tsx","./src/components/coordinateruler.tsx","./src/components/downloadbuttons.tsx","./src/components/gamesview.tsx","./src/components/supportmodal.tsx","./src/components/topaxisheader.tsx","./src/components/wiiudualstage.tsx","./src/data/catalog.ts"],"version":"5.8.3"}
