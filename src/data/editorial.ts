@@ -244,6 +244,7 @@ export const appNotes: Record<string, string> = {
   epidaurus: 'Нативный медиаплеер для Apple Silicon: VVC/H.266, HDR/Dolby Vision, объектный Dolby Atmos и торрент-стриминг.',
   kraken: 'Прозрачное сжатие файлов в фоне (~2.1×–4.0× экономии SSD) и наглядная Sunburst-карта диска на Mac.',
   real3d: 'Преобразует любой 2D-экран, игру или фильм в реальное стерео 3D (3840×1080 @ 60 FPS) для очков XREAL.',
+  fovea: 'Нативный 3D eye tracking для Mac по обычной камере: 60–120 Гц ProMotion, Zero-Calibration и жесты веками.',
 };
 
 export interface PortUpdate {

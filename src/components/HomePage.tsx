@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { MAC_APPS, MacApp, WIIU_PORTS } from '../data/catalog';
 import { appNotes, art, formatDate, stories, updates } from '../data/editorial';
-import { KrakenVectorMark } from './AppVisuals';
+import { FoveaVectorMark, KrakenVectorMark } from './AppVisuals';
 
 export function AppSquircle({
   app,
@@ -26,6 +26,8 @@ export function AppSquircle({
     <span className={`app-squircle app-squircle-${size} app-squircle-${app.id}`}>
       {app.iconUrl ? (
         <img src={app.iconUrl} alt="" />
+      ) : app.id === 'fovea' ? (
+        <FoveaVectorMark />
       ) : (
         <KrakenVectorMark />
       )}
@@ -267,6 +269,19 @@ export function HomePage() {
                         tabIndex={-1}
                       >
                         <img src={previewImg} alt="" loading="lazy" />
+                      </a>
+                    ) : app.id === 'fovea' ? (
+                      <a
+                        href={`#apps/${app.id}`}
+                        className="rpcs-app-peek rpcs-app-peek-fovea"
+                        aria-hidden="true"
+                        tabIndex={-1}
+                      >
+                        <div className="mini-player-ui">
+                          <span className="mini-badge mini-badge-sky">0.86 мс ANE Gaze</span>
+                          <span className="mini-badge mini-badge-sky">60–120 Гц ProMotion</span>
+                          <span className="mini-badge mini-badge-sky">Zero-Calibration</span>
+                        </div>
                       </a>
                     ) : (
                       <a

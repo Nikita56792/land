@@ -32,11 +32,29 @@ export interface GamePort {
   mirrors: MirrorLinks;
 }
 
+export interface PlatformPackage {
+  arch: 'x64' | 'arm';
+  label: string;
+  sizeLabel: string;
+  url: string | null;
+  fileName?: string;
+}
+
+export interface PlatformDownloads {
+  macosArm64?: PlatformPackage;
+  macosX64?: PlatformPackage;
+  windowsX64?: PlatformPackage;
+  windowsArm64?: PlatformPackage;
+  linuxX64?: PlatformPackage;
+  linuxArm64?: PlatformPackage;
+}
+
 export interface MacApp {
   id: string;
   name: string;
   previousName?: string;
   version: string;
+  releaseDate?: string;
   tagline: string;
   platform: string;
   license: string;
@@ -48,6 +66,7 @@ export interface MacApp {
   highlights: string[];
   screenshots?: { src: string; caption: string }[];
   mirrors: MirrorLinks;
+  platforms?: PlatformDownloads;
 }
 
 export const STUDIO_INFO = {
@@ -369,6 +388,43 @@ export const MAC_APPS: MacApp[] = [
       githubReleaseUrl: 'https://github.com/Nikita56792/real3d/releases/download/v1.2.0/Real3D-1.2.0.dmg',
       githubReleaseTag: 'v1.2.0',
       githubRepoUrl: 'https://github.com/Nikita56792/real3d',
+    },
+  },
+  {
+    id: 'fovea',
+    name: 'Fovea',
+    previousName: 'Fovea Eye Tracker',
+    version: 'v1.0.0',
+    releaseDate: '2026-11-22',
+    tagline:
+      'Нативный 3D eye tracking для macOS на обычной камере: 60–120 Гц ProMotion, инвариантность к позе головы, жесты веками и управление музыкой',
+    platform: 'macOS 14+ · Apple Silicon',
+    license: 'Open Source',
+    iconUrl: '',
+    accentHex: '#818CF8',
+    description:
+      'Нативное приложение на Swift 6, Core ML (Apple Neural Engine) и Metal GPU без Python в рантайме, определяющее точку взгляда по обычной веб-камере без ИК-подсветки. Полноценная 3D-геометрия (6DoF EPnP+LM+ESKF, масштаб по радужке 11.7 мм, нормализация Zhang 2018) и живой датчик угла крышки MacBook (LidAngleSensor) позволяют работать из коробки в режиме Zero-Calibration на 100% локально.',
+    architectureNote:
+      'AVCapture (30–120 fps) → Core ML ANE (BlazeFace + 478-pt FaceLandmarker + 52 Blendshapes) → 6DoF EPnP/ESKF + Iris 11.7 мм → MetalNormalizer (0.23 мс) → GazeNet (MobileOne-S0 / UniGaze-B16 + 3D Iris) → Ray→Screen + Kalman/1€ (60–120 Гц) → Cursor / Gestures / IPC',
+    specs: [
+      { label: 'Core ML ANE (M4 Max)', value: 'Landmarker 0.56 мс · MobileOne-S0 0.86 мс · UniGaze 4.27 мс' },
+      { label: 'Metal GPU варп', value: '0.23 мс нормализация / 0.20 мс ROI-кроп (zero-copy)' },
+      { label: 'Частота вывода', value: '60–120 Гц ProMotion (HighRatePredictor + 30–120 fps камера)' },
+      { label: '3D-инвариантность', value: '0.31° медиана · сдвиг 0.20° при yaw ±30°' },
+    ],
+    highlights: [
+      'Zero-Calibration из коробки: автоопределение модели Mac (hw.model), высоты выреза и живой датчик угла крышки MacBook (LidAngleSensor, без sudo) + персональная калибровка 18 / 45 / 70 с',
+      'Трёхдвижковая оценка взгляда на ANE: MobileOne-S0 Gaze (MIT, 90 бинов + σ), research-движок UniGaze-B16 и геометрический 3D-луч радужки (>300 FPS)',
+      'Режимы курсора MAGIC (телепортация при движении руки), Absolute с привязкой к AXUIElement, Precision Zoom ×4, Dwell-клик и глобальный стоп ⌃⌥⌘G',
+      '4-слойный анти-ложный движок жестов веками (0.00 ложных/ч в 1-ч стресс-тесте, sleep-cap >1.2 с) и Music Control Mode для системных медиа-клавиш macOS',
+    ],
+    mirrors: {
+      serverPath: './downloads/Fovea-1.0.0.dmg',
+      serverFileName: 'Fovea-1.0.0.dmg',
+      sizeLabel: '164 МБ (.dmg)',
+      githubReleaseUrl: 'https://github.com/Nikita56792/fovea/releases/download/v1.0.0/Fovea-1.0.0.dmg',
+      githubReleaseTag: 'v1.0.0',
+      githubRepoUrl: 'https://github.com/Nikita56792/fovea',
     },
   },
 ];

@@ -21,8 +21,11 @@ import {
 } from '../data/catalog';
 import { appNotes, art, stories } from '../data/editorial';
 import { AppSquircle } from './HomePage';
-import { DownloadButtons } from './DownloadButtons';
-import { EpidaurusArchitectureWidget } from './AppVisuals';
+import { AppDownloadsSection } from './AppDownloads';
+import {
+  EpidaurusArchitectureWidget,
+  FoveaArchitectureWidget,
+} from './AppVisuals';
 import { PortUpdatesStrip } from './UpdatesPages';
 
 export function GamesCatalogPage() {
@@ -123,8 +126,9 @@ export function AppsCatalogPage() {
           </span>
           <h1>Приложения для Mac</h1>
           <p className="catalog-lead">
-            Три нативных продукта с открытым кодом: кинотеатральный медиаплеер,
-            прозрачное сжатие SSD и реальное стерео 3D на Metal и Core ML.
+            Четыре нативных продукта с открытым кодом: кинотеатральный
+            медиаплеер, прозрачное сжатие SSD, стерео 3D на Metal и нативный 3D
+            eye tracking по обычной камере.
           </p>
         </div>
       </section>
@@ -206,6 +210,19 @@ export function AppsCatalogPage() {
                       <a href={`#apps/${app.id}`} className="rpcs-app-peek" aria-hidden="true" tabIndex={-1}>
                         <img src={previewImg} alt="" loading="lazy" />
                       </a>
+                    ) : app.id === 'fovea' ? (
+                      <a
+                        href={`#apps/${app.id}`}
+                        className="rpcs-app-peek rpcs-app-peek-fovea"
+                        aria-hidden="true"
+                        tabIndex={-1}
+                      >
+                        <div className="mini-player-ui">
+                          <span className="mini-badge mini-badge-sky">0.86 мс ANE Gaze</span>
+                          <span className="mini-badge mini-badge-sky">60–120 Гц ProMotion</span>
+                          <span className="mini-badge mini-badge-sky">Zero-Calibration</span>
+                        </div>
+                      </a>
                     ) : (
                       <a
                         href={`#apps/${app.id}`}
@@ -265,11 +282,37 @@ export function AppDetailPage({ app }: { app: MacApp }) {
                 {app.previousName && <small> ({app.previousName})</small>}
               </h1>
               <p className="app-detail-tagline">{app.tagline}</p>
-              <DownloadButtons mirrors={app.mirrors} />
+              <div className="dl-group">
+                <button
+                  type="button"
+                  className="btn-tactile btn-tactile-blue"
+                  onClick={() =>
+                    document
+                      .getElementById('app-downloads')
+                      ?.scrollIntoView({ behavior: 'smooth' })
+                  }
+                >
+                  <span>Скачать ({app.version})</span>
+                  <span className="btn-chip">{app.mirrors.sizeLabel}</span>
+                </button>
+                {app.mirrors.githubRepoUrl && (
+                  <a
+                    className="btn-tactile btn-tactile-light"
+                    href={app.mirrors.githubRepoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Github size={17} />
+                    <span>GitHub</span>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      <AppDownloadsSection app={app} />
 
       <section className="app-detail-content">
         <div className="container app-detail-grid">
@@ -362,6 +405,8 @@ export function AppDetailPage({ app }: { app: MacApp }) {
                   </div>
                 )}
               </div>
+            ) : app.id === 'fovea' ? (
+              <FoveaArchitectureWidget accentHex={app.accentHex} />
             ) : (
               <EpidaurusArchitectureWidget accentHex={app.accentHex} />
             )}

@@ -463,11 +463,7 @@ function BuckshotPage({ game }: { game: GamePort }) {
         >
           <div className="br-hero-scrim" />
           <div className="container br-hero-inner">
-            <div className="game-top-bar">
-              <a className="game-back-pill" href="#games">
-                <ArrowLeft size={16} />
-                <span>../games</span>
-              </a>
+            <div className="game-top-bar game-top-bar-end">
               <span className="br-stamp">WII U NATIVE PORT // 60 FPS</span>
             </div>
 

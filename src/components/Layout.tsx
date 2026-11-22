@@ -117,17 +117,6 @@ export function SiteHeader({
         </nav>
 
         <div className="header-actions">
-          <a
-            className="header-gh"
-            href={STUDIO_INFO.githubProfileUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub @Nikita56792"
-          >
-            <Github size={17} />
-            <span>GitHub</span>
-          </a>
-
           <button
             type="button"
             className="mobile-menu-btn"
@@ -205,7 +194,13 @@ export function SupportBand({ onOpenSupport }: { onOpenSupport: () => void }) {
   );
 }
 
-export function SiteFooter({ onOpenSupport }: { onOpenSupport: () => void }) {
+export function SiteFooter({
+  onOpenSupport,
+  showSupportButton = false,
+}: {
+  onOpenSupport: () => void;
+  showSupportButton?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -333,6 +328,15 @@ export function SiteFooter({ onOpenSupport }: { onOpenSupport: () => void }) {
                   Real3D
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://github.com/Nikita56792/fovea"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Fovea
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -354,14 +358,26 @@ export function SiteFooter({ onOpenSupport }: { onOpenSupport: () => void }) {
             </a>
           </div>
 
-          <button
-            type="button"
-            className="scroll-top-btn"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            aria-label="Наверх"
-          >
-            <ArrowUp size={18} />
-          </button>
+          <div className="footer-bottom-actions">
+            {showSupportButton && (
+              <button
+                type="button"
+                className="footer-support-btn"
+                onClick={onOpenSupport}
+              >
+                <Coffee size={15} />
+                <span>Поддержать</span>
+              </button>
+            )}
+            <button
+              type="button"
+              className="scroll-top-btn"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              aria-label="Наверх"
+            >
+              <ArrowUp size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </footer>

@@ -36,6 +36,9 @@ const REVEAL_SELECTOR = [
   '.hub-update-card',
   '.strip-update-card',
   '.media-stage',
+  '.latest-build-banner',
+  '.os-card',
+  '.prev-builds-card',
 ].join(',');
 
 export default function App() {
@@ -206,10 +209,11 @@ export default function App() {
         {content}
       </main>
 
-      {!isPersistentDark && (
-        <SupportBand onOpenSupport={() => setSupportOpen(true)} />
-      )}
-      <SiteFooter onOpenSupport={() => setSupportOpen(true)} />
+      {isHome && <SupportBand onOpenSupport={() => setSupportOpen(true)} />}
+      <SiteFooter
+        onOpenSupport={() => setSupportOpen(true)}
+        showSupportButton={!isHome}
+      />
 
       {supportOpen && <SupportModal onClose={() => setSupportOpen(false)} />}
     </div>

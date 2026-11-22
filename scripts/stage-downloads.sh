@@ -20,6 +20,7 @@ copy_if_exists() {
 copy_if_exists "/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/realgame/app/build/Epidaurus-0.2.0.dmg" "Epidaurus-0.2.0.dmg"
 copy_if_exists "/Users/nikitasyzdykov/Kraken Disk/Desktop/kraken/dist/Kraken-0.4.0.pkg" "Kraken-0.4.0.pkg"
 copy_if_exists "/Users/nikitasyzdykov/Kraken Disk/Desktop/real3d/checkpoints/Real3D-1.2.0.dmg" "Real3D-1.2.0.dmg"
+copy_if_exists "/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/eye_track/build/Fovea-1.0.0.dmg" "Fovea-1.0.0.dmg"
 copy_if_exists "/Users/nikitasyzdykov/Downloads/mcwiiu-reconstructed-main/build/wiiu/Minecraft.WiiU-DualScreenUI.wuhb" "Minecraft.WiiU-DualScreenUI.wuhb"
 
 ls -lh "$DL"
