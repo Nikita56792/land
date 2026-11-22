@@ -1,0 +1,58 @@
+Официальные иллюстрации и кадры оригинальных игр.
+Minecraft: Wii U Edition — Mojang / Nintendo of Europe.
+Buckshot Roulette — Mike Klubnika / CRITICAL REFLEX, Steam.
+Slime Rancher — Monomi Park, Steam.
+Subnautica — Unknown Worlds, Steam.
+
+minecraft-cover.webp
+https://www.nintendo.com/eu/media/images/06_screenshots/games_5/wiiu_7/wiiu_minecraftwiiuedition/WiiU_MinecraftWiiUEdition_01.jpg
+minecraft-scene.webp
+https://www.nintendo.com/eu/media/images/06_screenshots/games_5/wiiu_7/wiiu_minecraftwiiuedition/WiiU_MinecraftWiiUEdition_06.jpg
+minecraft-detail.webp
+https://www.nintendo.com/eu/media/images/06_screenshots/games_5/wiiu_7/wiiu_minecraftwiiuedition/WiiU_MinecraftWiiUEdition_03.jpg
+
+buckshot-cover.webp
+https://cdn.cloudflare.steamstatic.com/steam/apps/2835570/library_hero.jpg
+buckshot-scene.webp
+https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2835570/ss_c9c2df013e1c2d1b97f2c5cce57c22c24efd5178.1920x1080.jpg
+buckshot-detail.webp
+https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2835570/ss_3ef4fc68827fa9ba6a713f314925c6d5d7a05d16.1920x1080.jpg
+slime-cover.webp
+https://cdn.cloudflare.steamstatic.com/steam/apps/433340/library_hero.jpg
+slime-scene.webp
+https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/433340/ss_5339a74c4563d40a1d8a5638db2a9ed59c5b883b.1920x1080.jpg
+slime-detail.webp
+https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/433340/ss_e43a384a5d5ab9bcb943423c1e264a54ce840c43.1920x1080.jpg
+subnautica-cover.webp
+https://cdn.cloudflare.steamstatic.com/steam/apps/264710/library_hero.jpg
+subnautica-scene.webp
+https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_e182b6b20bb797500f9f63c561586d920d44e37c.1920x1080.jpg
+subnautica-detail.webp
+https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/264710/ss_0ace7f8b4350b8fbdd16345a76bc30545256e918.1920x1080.jpg
+
+minecraft-logo.webp
+https://www.mariowiki.com/images/c/c4/Minecraft_Wii_U_Edition_Logo.png
+buckshot-logo.webp
+https://cdn.cloudflare.steamstatic.com/steam/apps/2835570/logo.png
+slime-logo.webp
+https://cdn.cloudflare.steamstatic.com/steam/apps/433340/logo.png
+subnautica-logo.webp
+https://cdn.cloudflare.steamstatic.com/steam/apps/264710/logo.png
+
+Дополнительные официальные скриншоты (public/media/art/gallery/):
+- Buckshot Roulette (Steam AppID 2835570): buckshot-02..05.webp
+- Slime Rancher (Steam AppID 433340): slime-02..05.webp
+- Subnautica (Steam AppID 264710 + Fandom PDA): subnautica-02..05.webp, subnautica-pda1..2.webp
+- Minecraft: Wii U Edition (Minecraft Wiki): minecraft-02..05.webp
+
+Официальные прозрачные рендеры (public/media/art/cutouts/):
+- Minecraft: mc-steve.webp, mc-alex.webp, mc-creeper.webp, mc-grass.webp
+- Slime Rancher: slime-pink.webp, slime-tabby.webp, slime-honey.webp, slime-phosphor.webp
+- Subnautica: sub-peeper.webp, sub-seamoth.webp
+
+Композиты TV + реальный Wii U GamePad из image.png с оригинальными кадрами игр (public/media/hardware/):
+- hero-gamepad.png
+- minecraft-tv-gamepad.png
+- buckshot-tv-gamepad.png
+- slime-tv-gamepad.png
+- subnautica-tv-gamepad.png

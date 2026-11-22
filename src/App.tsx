@@ -1,110 +1,218 @@
-import React, { useEffect, useState } from 'react';
-import { Github, Heart, ArrowRightLeft } from 'lucide-react';
-import { STUDIO_INFO, SectionTab } from './data/catalog';
-import { TopAxisHeader } from './components/TopAxisHeader';
-import { CoordinateRuler } from './components/CoordinateRuler';
-import { GamesView } from './components/GamesView';
-import { AppsView } from './components/AppsView';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { MAC_APPS, WIIU_PORTS } from './data/catalog';
+import { stories, updates } from './data/editorial';
+import { SiteFooter, SiteHeader, SupportBand } from './components/Layout';
+import { HomePage } from './components/HomePage';
+import {
+  AppDetailPage,
+  AppsCatalogPage,
+  GamesCatalogPage,
+} from './components/AppPages';
+import { GameDetailPage } from './components/GamePages';
+import { UpdateArticlePage, UpdatesHubPage } from './components/UpdatesPages';
 import { SupportModal } from './components/SupportModal';
 
-function parseTabFromHash(): SectionTab {
-  if (typeof window === 'undefined') return 'games';
-  return window.location.hash.startsWith('#apps') ? 'apps' : 'games';
-}
+const readPath = () =>
+  window.location.hash.slice(1).replace(/^\/+|\/+$/g, '') || 'home';
 
-export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<SectionTab>(parseTabFromHash);
+const REVEAL_SELECTOR = [
+  '.port-card',
+  '.rpcs-app-card',
+  '.mc-news-card',
+  '.release-banner-card',
+  '.hardware-showcase',
+  '.mc-pillar-card',
+  '.br-pillar-box',
+  '.br-raw-shot',
+  '.sr-pillar-card',
+  '.sn-pillar-card',
+  '.sn-glass-panel',
+  '.mc-download-card',
+  '.sr-release-card',
+  '.pipeline-card',
+  '.apple-surface-card',
+  '.apple-gallery-card',
+  '.apple-bench-card',
+  '.hub-update-card',
+  '.strip-update-card',
+  '.media-stage',
+].join(',');
+
+export default function App() {
+  const [path, setPath] = useState(readPath);
   const [supportOpen, setSupportOpen] = useState(false);
 
+  const lastPath = useRef(path);
+  const mainRef = useRef<HTMLElement>(null);
+
+  const [section, id, extra] = path.split('/');
+  const game = WIIU_PORTS.find((item) => item.slug === id);
+  const app = MAC_APPS.find((item) => item.id === id);
+  const note = updates.find((item) => item.slug === id);
+
   useEffect(() => {
-    const onHashChange = () => {
-      setActiveTab(parseTabFromHash());
-    };
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    const onHash = () => setPath(readPath());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  const handleSelectTab = (tab: SectionTab) => {
-    setActiveTab(tab);
-    window.history.replaceState(null, '', `#${tab}`);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  useLayoutEffect(() => {
+    if (lastPath.current !== path) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      mainRef.current?.focus({ preventScroll: true });
+      lastPath.current = path;
+    }
+
+    if (section === 'home' && !id) {
+      document.title = 'REAL // LAB — Порты для Wii U и приложения для Mac';
+    } else if (section === 'games' && game) {
+      document.title = `${stories[game.slug].name} на Wii U — REAL // LAB`;
+    } else if (section === 'apps' && app) {
+      document.title = `${app.name} для Mac — REAL // LAB`;
+    } else if (section === 'updates' && note) {
+      document.title = `${note.title} — REAL // LAB`;
+    } else if (section === 'games') {
+      document.title = 'Игры для Wii U — REAL // LAB';
+    } else if (section === 'apps') {
+      document.title = 'Приложения для Mac — REAL // LAB';
+    } else if (section === 'updates') {
+      document.title = 'Обновления портов — REAL // LAB';
+    } else {
+      document.title = 'Страница не найдена — REAL // LAB';
+    }
+  }, [path, section, id, game, app, note]);
+
+  // Smooth staggered scroll-reveal on every route navigation
+  useEffect(() => {
+    const root = mainRef.current;
+    if (!root) return;
+
+    const nodes = Array.from(root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
+    if (nodes.length === 0) return;
+
+    const vh = window.innerHeight || 900;
+    const toObserve: HTMLElement[] = [];
+
+    nodes.forEach((el) => {
+      const parent = el.parentElement;
+      const siblings = parent
+        ? Array.from(parent.children).filter((c) => c.matches(REVEAL_SELECTOR))
+        : [el];
+      const idx = Math.max(0, siblings.indexOf(el));
+      el.style.setProperty('--reveal-delay', `${Math.min(idx * 65, 260)}ms`);
+      el.classList.add('reveal-ready');
+
+      const rect = el.getBoundingClientRect();
+      if (rect.top < vh * 0.96) {
+        requestAnimationFrame(() => el.classList.add('is-revealed'));
+      } else {
+        toObserve.push(el);
+      }
+    });
+
+    if (toObserve.length === 0 || typeof IntersectionObserver === 'undefined') {
+      toObserve.forEach((el) => el.classList.add('is-revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -36px 0px' }
+    );
+
+    toObserve.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [path]);
+
+  const isHome = section === 'home' && !id;
+  const isGameDetail = section === 'games' && Boolean(game) && !extra;
+  const isDarkHeader =
+    isHome ||
+    (isGameDetail &&
+      (game?.slug === 'minecraft' ||
+        game?.slug === 'buckshot' ||
+        game?.slug === 'subnautica' ||
+        game?.slug === 'slime'));
+  const isPersistentDark =
+    isGameDetail && (game?.slug === 'buckshot' || game?.slug === 'subnautica');
+
+  const pageTransitionClass = isGameDetail
+    ? `page-enter-${game?.slug}`
+    : 'page-enter-apple';
+
+  let content;
+  if (isHome) {
+    content = <HomePage />;
+  } else if (section === 'games' && !id) {
+    content = <GamesCatalogPage />;
+  } else if (section === 'games' && game && !extra) {
+    content = <GameDetailPage game={game} />;
+  } else if (section === 'apps' && !id) {
+    content = <AppsCatalogPage />;
+  } else if (section === 'apps' && app && !extra) {
+    content = <AppDetailPage app={app} />;
+  } else if (section === 'updates' && !id) {
+    content = <UpdatesHubPage />;
+  } else if (section === 'updates' && note && !extra) {
+    content = <UpdateArticlePage note={note} />;
+  } else {
+    content = (
+      <section className="not-found-page">
+        <div className="container">
+          <h1>Страница не найдена</h1>
+          <p>Возможно, ссылка устарела или проект переехал в другой раздел.</p>
+          <a className="btn-tactile btn-tactile-blue" href="#home">
+            Вернуться на главную
+          </a>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <div id="top" className="min-h-screen bg-[#07080A] bg-architectural-grid text-[#F3F4F6]">
-      <TopAxisHeader
-        activeTab={activeTab}
-        onSelectTab={handleSelectTab}
+    <div className="site-root">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault();
+          mainRef.current?.focus();
+        }}
+      >
+        Перейти к содержимому
+      </a>
+
+      <SiteHeader
+        section={section}
+        transparentHero={isDarkHeader}
+        darkSurface={isPersistentDark}
         onOpenSupport={() => setSupportOpen(true)}
       />
 
-      <CoordinateRuler activeTab={activeTab} />
-
-      <main className="relative">
-        {activeTab === 'games' ? (
-          <GamesView onOpenSupport={() => setSupportOpen(true)} />
-        ) : (
-          <AppsView onOpenSupport={() => setSupportOpen(true)} />
-        )}
+      <main
+        key={path}
+        id="main"
+        tabIndex={-1}
+        ref={mainRef}
+        className={`page-stage ${pageTransitionClass}`}
+      >
+        {content}
       </main>
 
-      {/* Clean Minimal Footer with Cross-Tab Switch & GitHubs */}
-      <footer className="border-t border-white/10 bg-[#050608]">
-        <div className="mx-auto flex max-w-[1260px] flex-col justify-between gap-6 px-4 py-10 sm:px-8 md:flex-row md:items-center">
-          <div className="space-y-1.5">
-            <div className="font-display text-sm font-semibold text-white">
-              {STUDIO_INFO.brand} · @{STUDIO_INFO.handle}
-            </div>
-            <p className="text-xs text-white/45">{STUDIO_INFO.locationNote}</p>
-          </div>
+      {!isPersistentDark && (
+        <SupportBand onOpenSupport={() => setSupportOpen(true)} />
+      )}
+      <SiteFooter onOpenSupport={() => setSupportOpen(true)} />
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => handleSelectTab(activeTab === 'games' ? 'apps' : 'games')}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/12 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-white/85 transition hover:border-white/25 hover:text-white"
-            >
-              <ArrowRightLeft className="h-3.5 w-3.5" />
-              <span>
-                {activeTab === 'games' ? 'Перейти в Mac Apps' : 'Перейти в Wii U Ports'}
-              </span>
-            </button>
-
-            <a
-              href={STUDIO_INFO.githubProfileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3.5 py-2 text-xs text-white/75 transition hover:border-white/25 hover:text-white"
-            >
-              <Github className="h-3.5 w-3.5" />
-              <span>GitHub автора</span>
-            </a>
-
-            <a
-              href={STUDIO_INFO.landingRepoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3.5 py-2 text-xs text-white/75 transition hover:border-white/25 hover:text-white"
-            >
-              <Github className="h-3.5 w-3.5" />
-              <span>Репозиторий сайта</span>
-            </a>
-
-            <button
-              type="button"
-              onClick={() => setSupportOpen(true)}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/10 px-3.5 py-2 text-xs text-white/75 transition hover:border-white/25 hover:text-white"
-            >
-              <Heart className="h-3.5 w-3.5 text-[#E2A856]" />
-              <span>Донат</span>
-            </button>
-          </div>
-        </div>
-      </footer>
-
-      <SupportModal open={supportOpen} onClose={() => setSupportOpen(false)} />
+      {supportOpen && <SupportModal onClose={() => setSupportOpen(false)} />}
     </div>
   );
-};
-
-export default App;
+}
