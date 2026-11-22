@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowUp, Check, Copy, Github, Heart, Menu, X } from 'lucide-react';
+import { ArrowUp, Check, Coffee, Copy, Github, Menu, X } from 'lucide-react';
 import { MAC_APPS, STUDIO_INFO, WIIU_PORTS } from '../data/catalog';
 import { stories } from '../data/editorial';
 
@@ -29,14 +29,12 @@ interface SiteHeaderProps {
   section: string;
   transparentHero?: boolean;
   darkSurface?: boolean;
-  onOpenSupport: () => void;
 }
 
 export function SiteHeader({
   section,
   transparentHero = false,
   darkSurface = false,
-  onOpenSupport,
 }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -132,15 +130,6 @@ export function SiteHeader({
 
           <button
             type="button"
-            className="header-support"
-            onClick={onOpenSupport}
-          >
-            <Heart size={15} />
-            <span>Поддержать</span>
-          </button>
-
-          <button
-            type="button"
             className="mobile-menu-btn"
             aria-expanded={menuOpen}
             aria-controls="mobile-drawer"
@@ -185,17 +174,15 @@ export function SiteHeader({
 
 export function SupportBand({ onOpenSupport }: { onOpenSupport: () => void }) {
   return (
-    <section className="support-band" aria-label="Поддержка проекта">
+    <section className="support-band" aria-label="Поддержка автора">
       <div className="support-band-pattern" aria-hidden="true" />
       <div className="container support-band-inner">
         <div className="support-band-copy">
-          <span className="eyebrow-pill">
-            Open Source · Независимая разработка
-          </span>
-          <h2>Порты на Wii U и приложения для Mac без рекламы и подписок</h2>
+          <h2>Если проекты оказались полезны</h2>
           <p>
-            Проекты развиваются одним автором. Поддержка помогает оплачивать
-            локальный сервер загрузок и уделять больше времени новым портам.
+            Всё здесь в открытом доступе. Если хочется просто угостить на кофе
+            или закинуть на нейронки — буду рад, но это совершенно не
+            обязательно.
           </p>
         </div>
         <div className="support-band-actions">
@@ -204,8 +191,8 @@ export function SupportBand({ onOpenSupport }: { onOpenSupport: () => void }) {
             className="btn-tactile btn-tactile-coral"
             onClick={onOpenSupport}
           >
-            <Heart size={17} />
-            <span>Поддержать автора</span>
+            <Coffee size={17} />
+            <span>На кофе и нейронки</span>
           </button>
           <a
             className="btn-tactile btn-tactile-light"
@@ -355,11 +342,20 @@ export function SiteFooter({ onOpenSupport }: { onOpenSupport: () => void }) {
         </div>
 
         <div className="footer-bottom-bar">
-          <div className="footer-badges">
-            <span className="footer-pill">REAL // LAB · Nikita56792</span>
-            <span className="footer-pill">
-              Wii U Aroma .wuhb · Apple Silicon
+          <div className="footer-signoff">
+            <img src="./mark.svg" alt="" width={24} height={24} />
+            <span className="footer-signoff-brand">
+              REAL <em>//</em> LAB
             </span>
+            <span className="footer-signoff-sep" aria-hidden="true">·</span>
+            <a
+              className="footer-signoff-handle"
+              href={STUDIO_INFO.githubProfileUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Nikita56792
+            </a>
           </div>
 
           <button

@@ -32,7 +32,7 @@ export function GamesCatalogPage() {
         <div className="container">
           <span className="section-eyebrow">
             <Gamepad2 size={15} />
-            <span>Nintendo Wii U · Cafe OS / Aroma</span>
+            <span>Nintendo Wii U</span>
           </span>
           <h1>Игровые порты для Wii U</h1>
           <p className="catalog-lead">

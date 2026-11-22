@@ -194,7 +194,6 @@ export default function App() {
         section={section}
         transparentHero={isDarkHeader}
         darkSurface={isPersistentDark}
-        onOpenSupport={() => setSupportOpen(true)}
       />
 
       <main

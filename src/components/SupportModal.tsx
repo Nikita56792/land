@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, Copy, ExternalLink, Heart, Mail, X } from 'lucide-react';
+import { Check, Coffee, Copy, ExternalLink, Mail, X } from 'lucide-react';
 import { DONATE_METHODS, STUDIO_INFO } from '../data/catalog';
 
 export function SupportModal({ onClose }: { onClose: () => void }) {
@@ -39,8 +39,8 @@ export function SupportModal({ onClose }: { onClose: () => void }) {
       <div className="support-modal-inner">
         <div className="support-modal-head">
           <span className="support-badge">
-            <Heart size={16} />
-            <span>Поддержка разработки</span>
+            <Coffee size={16} />
+            <span>На кофе и нейронки</span>
           </span>
           <button
             type="button"
@@ -52,10 +52,10 @@ export function SupportModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <h2 id="support-modal-title">Поддержать REAL // LAB</h2>
+        <h2 id="support-modal-title">Угостить автора</h2>
         <p className="support-modal-lead">
-          Все порты для Wii U и нативные приложения для macOS создаются в открытом
-          доступе. Помощь идёт на сервер с зеркалом сборок и время на портирование.
+          Если проекты пригодились и хочется просто закинуть на кофе или
+          нейронки — здесь контакты и способы перевода.
         </p>
 
         <div className="segment-control" role="tablist" aria-label="Способ поддержки">

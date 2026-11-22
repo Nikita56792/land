@@ -47,10 +47,6 @@ export function HomePage() {
         <div className="rpcs-hero-particles" aria-hidden="true" />
         <div className="container rpcs-hero-grid">
           <div className="rpcs-hero-copy">
-            <span className="hero-kicker-pill">
-              <span className="hero-kicker-dot" />
-              <span>Nintendo Wii U · Apple Silicon</span>
-            </span>
             <h1>
               Порты для Wii U
               <br />и приложения для Mac
@@ -117,7 +113,7 @@ export function HomePage() {
             <div>
               <span className="section-eyebrow">
                 <Gamepad2 size={15} />
-                <span>Nintendo Wii U · Cafe OS / Aroma</span>
+                <span>Nintendo Wii U</span>
               </span>
               <h2>Игровые порты</h2>
               <p className="section-sub">
