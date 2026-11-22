@@ -55,7 +55,7 @@ export const STUDIO_INFO = {
   handle: 'Nikita56792',
   githubProfileUrl: 'https://github.com/Nikita56792',
   landingRepoUrl: 'https://github.com/Nikita56792/land',
-  contactEmail: 'nikitka.syzdykov@mail.ru',
+  contactEmail: 'hello@reallab.dev',
   locationNote: 'Независимые инженерные релизы · Открытый исходный код',
 };
 
@@ -63,26 +63,26 @@ export const DONATE_METHODS = {
   ru: [
     {
       name: 'Альфа-Банк (СБП / Перевод)',
-      detail: 'Реквизиты и прямая ссылка на пополнение — уточняются перед публикацией / через почту поддержки',
-      actionLabel: 'Запросить ссылку / Связаться',
-      href: 'mailto:nikitka.syzdykov@mail.ru?subject=%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%BE%D0%B2%20(Alfa)',
+      detail: 'Реквизиты и прямая ссылка на перевод — по запросу на почту',
+      actionLabel: 'Связаться',
+      href: 'mailto:hello@reallab.dev?subject=Support%20(Alfa)',
       valueToCopy: '',
     },
     {
       name: 'ЮMoney (YooMoney)',
-      detail: 'Кошелёк для прямой поддержки портов Wii U и нативных утилит macOS',
-      actionLabel: 'Написать по переводу',
-      href: 'mailto:nikitka.syzdykov@mail.ru?subject=%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%BE%D0%B2%20(YooMoney)',
+      detail: 'Перевод на кофе и оплату нейросетей',
+      actionLabel: 'Написать',
+      href: 'mailto:hello@reallab.dev?subject=Support%20(YooMoney)',
       valueToCopy: '',
     },
   ],
   intl: [
     {
-      name: 'GitHub Sponsors / Direct Contact',
-      detail: 'Международная поддержка развития open-source портов и нативных приложений для Apple Silicon',
+      name: 'GitHub / Direct Contact',
+      detail: 'Прямой контакт через профиль GitHub или почту',
       actionLabel: 'GitHub @Nikita56792',
       href: 'https://github.com/Nikita56792',
-      valueToCopy: 'nikitka.syzdykov@mail.ru',
+      valueToCopy: 'hello@reallab.dev',
     },
   ],
 };

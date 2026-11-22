@@ -52,10 +52,9 @@ export function SupportModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <h2 id="support-modal-title">Угостить автора</h2>
+        <h2 id="support-modal-title">На кофе и нейросети</h2>
         <p className="support-modal-lead">
-          Если проекты пригодились и хочется просто закинуть на кофе или
-          нейронки — здесь контакты и способы перевода.
+          Способы перевода на кофе и оплату моделей.
         </p>
 
         <div className="segment-control" role="tablist" aria-label="Способ поддержки">

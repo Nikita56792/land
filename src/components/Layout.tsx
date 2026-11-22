@@ -174,16 +174,12 @@ export function SiteHeader({
 
 export function SupportBand({ onOpenSupport }: { onOpenSupport: () => void }) {
   return (
-    <section className="support-band" aria-label="Поддержка автора">
+    <section className="support-band" aria-label="На кофе и модели">
       <div className="support-band-pattern" aria-hidden="true" />
       <div className="container support-band-inner">
         <div className="support-band-copy">
-          <h2>Если проекты оказались полезны</h2>
-          <p>
-            Всё здесь в открытом доступе. Если хочется просто угостить на кофе
-            или закинуть на нейронки — буду рад, но это совершенно не
-            обязательно.
-          </p>
+          <h2>На кофе и нейросети</h2>
+          <p>Донат на кофе, токены и оплату моделей.</p>
         </div>
         <div className="support-band-actions">
           <button
@@ -192,7 +188,7 @@ export function SupportBand({ onOpenSupport }: { onOpenSupport: () => void }) {
             onClick={onOpenSupport}
           >
             <Coffee size={17} />
-            <span>На кофе и нейронки</span>
+            <span>Поддержать</span>
           </button>
           <a
             className="btn-tactile btn-tactile-light"
