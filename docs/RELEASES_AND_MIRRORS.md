@@ -44,7 +44,7 @@
 
 | Платформа | Версия | Файл в `/releases/` | Размер | Формат / Архитектура | Сборка |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **macOS** | `v1.0.0` | `Parhelio-Launcher-1.0.0-macos-arm64.dmg` | `4.45 МБ` (`4,663,083 B`) | Apple Silicon (`arm64`) `.dmg` | Локально (`tauri build --bundles dmg`) + GitHub Actions |
+| **macOS** | `v1.0.0` | `Parhelio-Launcher-1.0.0-macos-arm64.dmg` | `4.40 МБ` (`4,613,819 B`) | Apple Silicon (`arm64`) `.dmg` (ad-hoc `codesign --deep`) | Локально + GitHub Actions |
 | **Windows** | `v1.0.0` | `Parhelio-Launcher-1.0.0-windows-x64.exe` | `3.11 МБ` (`3,266,052 B`) | `x86_64` NSIS Installer `.exe` | GitHub Actions (`windows-latest`) |
 | **Linux** | `v1.0.0` | `Parhelio-Launcher-1.0.0-linux-x64.AppImage` | `84.1 МБ` (`88,185,336 B`) | `x86_64` portable `.AppImage` | GitHub Actions (`ubuntu-latest`) |
 

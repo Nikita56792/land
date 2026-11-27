@@ -25,7 +25,7 @@ jobs:
           - os: macos-latest
             os_label: macOS Apple Silicon
             target: aarch64-apple-darwin
-            bundle: dmg
+            bundle: app
             artifact_name: Parhelio-Launcher-1.0.0-macos-arm64.dmg
           - os: windows-latest
             os_label: Windows x64
@@ -93,19 +93,32 @@ jobs:
           mkdir -p dist-release
           BUNDLE_DIR="src-tauri/target/${{ matrix.target }}/release/bundle"
 
-          if [[ "${{ matrix.bundle }}" == "dmg" ]]; then
-            SRC_FILE="$(find "$BUNDLE_DIR/dmg" -maxdepth 1 -type f -name '*.dmg' | head -n 1)"
+          if [[ "${{ matrix.bundle }}" == "app" ]]; then
+            APP_BUNDLE="$(find "$BUNDLE_DIR/macos" -maxdepth 1 -type d -name '*.app' | head -n 1)"
+            if [[ -z "${APP_BUNDLE:-}" || ! -d "$APP_BUNDLE" ]]; then
+              echo "ERROR: Expected .app bundle not found in $BUNDLE_DIR/macos" >&2
+              exit 1
+            fi
+            # Replace linker-only signature with a valid deep ad-hoc bundle signature (binds Info.plist & CodeResources)
+            xattr -cr "$APP_BUNDLE"
+            codesign --force --deep --sign - --identifier "ru.parhelio.launcher" "$APP_BUNDLE"
+            codesign --verify --deep --strict --verbose=2 "$APP_BUNDLE"
+
+            DMG_STAGE="$(mktemp -d)"
+            cp -R "$APP_BUNDLE" "$DMG_STAGE/"
+            ln -s /Applications "$DMG_STAGE/Applications"
+            hdiutil create -volname "Parhelio Launcher" -srcfolder "$DMG_STAGE" -ov -format UDZO "dist-release/${{ matrix.artifact_name }}"
+            rm -rf "$DMG_STAGE"
           else
             SRC_FILE="$(find "$BUNDLE_DIR/appimage" -maxdepth 1 -type f -name '*.AppImage' | head -n 1)"
+            if [[ -z "${SRC_FILE:-}" || ! -f "$SRC_FILE" ]]; then
+              echo "ERROR: Expected bundle not found in $BUNDLE_DIR" >&2
+              find "$BUNDLE_DIR" -maxdepth 3 -ls || true
+              exit 1
+            fi
+            cp "$SRC_FILE" "dist-release/${{ matrix.artifact_name }}"
           fi
 
-          if [[ -z "${SRC_FILE:-}" || ! -f "$SRC_FILE" ]]; then
-            echo "ERROR: Expected bundle not found in $BUNDLE_DIR" >&2
-            find "$BUNDLE_DIR" -maxdepth 3 -ls || true
-            exit 1
-          fi
-
-          cp "$SRC_FILE" "dist-release/${{ matrix.artifact_name }}"
           (cd dist-release && shasum -a 256 "${{ matrix.artifact_name }}" > "${{ matrix.artifact_name }}.sha256")
           ls -lh dist-release
 

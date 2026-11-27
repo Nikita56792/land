@@ -599,6 +599,20 @@ export function HomePage() {
               <div className="launcher-mirror-wrap">
                 <MirrorSelectorBar />
               </div>
+
+              <p
+                style={{
+                  margin: '10px 0 0',
+                  fontSize: '12px',
+                  lineHeight: 1.5,
+                  color: 'var(--text-muted, #64748b)',
+                }}
+              >
+                <strong>macOS (без платного Apple Developer ID):</strong>{' '}
+                перетащите в <code>Программы</code> и при первом запуске снимите
+                карантин браузера:{' '}
+                <code>xattr -cr &quot;/Applications/Parhelio Launcher.app&quot;</code>
+              </p>
             </div>
 
             <div className="launcher-showcase-visual">
