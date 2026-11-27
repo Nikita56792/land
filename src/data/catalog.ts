@@ -95,7 +95,7 @@ export const STUDIO_INFO = {
   handle: 'Nikita56792',
   githubProfileUrl: 'https://github.com/Nikita56792',
   landingRepoUrl: 'https://github.com/Nikita56792/land',
-  contactEmail: 'hello@parhelio.ru',
+  contactEmail: 'help@parhelio.ru',
   locationNote: 'Parhelio · Независимые порты для Wii U и софт для Mac',
 };
 
