@@ -71,3 +71,11 @@ NS-серверы у регистратора Timeweb делегированы �
 - `AllowedHeaders`: `*`
 - `ExposeHeaders`: `Content-Length`, `Content-Range`, `ETag`, `Accept-Ranges`
 - `MaxAgeSeconds`: `86400`
+
+---
+
+## 5. Добровольная поддержка (Донаты)
+
+Прямые защищённые ссылки без бэкенда и API-ключей (`src/data/catalog.ts`, `src/components/SupportModal.tsx` с автоопределением вкладки через `useSmartMirror()`):
+- **Из России (РФ / СНГ):** ЮMoney — `https://yoomoney.ru/to/4100119696403242` (+ альтернатива Boosty)
+- **Международно:** Boosty — `https://boosty.to/parhelios/donate` и страница `https://boosty.to/parhelios`

@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Coffee, Copy, ExternalLink, Mail, X } from 'lucide-react';
 import { DONATE_METHODS, STUDIO_INFO } from '../data/catalog';
+import { useSmartMirror } from '../lib/mirrors';
 
 export function SupportModal({ onClose }: { onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
-  const [region, setRegion] = useState<'ru' | 'intl'>('ru');
+  const { activeMirror } = useSmartMirror();
+  const [region, setRegion] = useState<'ru' | 'intl'>(
+    activeMirror === 'ru' ? 'ru' : 'intl'
+  );
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -54,7 +58,8 @@ export function SupportModal({ onClose }: { onClose: () => void }) {
 
         <h2 id="support-modal-title">На кофе и нейросети</h2>
         <p className="support-modal-lead">
-          Способы перевода на кофе и оплату моделей.
+          Добровольная поддержка открытых портов и приложений Parhelio — без
+          подписок и ограничений на скачивание.
         </p>
 
         <div className="segment-control" role="tablist" aria-label="Способ поддержки">

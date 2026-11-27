@@ -102,27 +102,34 @@ export const STUDIO_INFO = {
 export const DONATE_METHODS = {
   ru: [
     {
-      name: 'ЮMoney (YooMoney)',
-      detail: 'Добровольная поддержка из России — на кофе, серверы и нейросети',
-      actionLabel: 'Написать',
-      href: 'mailto:hello@parhelio.ru?subject=Support%20Parhelio%20(YooMoney)',
-      valueToCopy: '',
+      name: 'ЮMoney (Карты РФ · SberPay · Кошелёк)',
+      detail: 'Добровольный перевод на кофе, серверы и нейросети · 4100119696403242',
+      actionLabel: 'Перевести',
+      href: 'https://yoomoney.ru/to/4100119696403242',
+      valueToCopy: '4100119696403242',
     },
     {
-      name: 'СБП / Перевод по РФ',
-      detail: 'Прямая ссылка на перевод — по запросу на почту',
-      actionLabel: 'Связаться',
-      href: 'mailto:hello@parhelio.ru?subject=Support%20Parhelio%20(SBP)',
+      name: 'Boosty (Разовый донат)',
+      detail: 'Альтернативный способ поддержки с карт РФ и из-за рубежа',
+      actionLabel: 'Открыть Boosty',
+      href: 'https://boosty.to/parhelios/donate',
       valueToCopy: '',
     },
   ],
   intl: [
     {
-      name: 'GitHub / Direct Contact',
-      detail: 'Международная поддержка и связь через GitHub или почту',
-      actionLabel: 'GitHub @Nikita56792',
-      href: 'https://github.com/Nikita56792',
-      valueToCopy: 'hello@parhelio.ru',
+      name: 'Boosty — One-Time Donation',
+      detail: 'International cards & PayPal · voluntary support for Parhelio',
+      actionLabel: 'Donate on Boosty',
+      href: 'https://boosty.to/parhelios/donate',
+      valueToCopy: '',
+    },
+    {
+      name: 'Boosty — Parhelio Page',
+      detail: 'Follow updates or support monthly on boosty.to/parhelios',
+      actionLabel: 'Open Page',
+      href: 'https://boosty.to/parhelios',
+      valueToCopy: '',
     },
   ],
 };
