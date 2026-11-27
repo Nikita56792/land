@@ -7,3 +7,7 @@ downloads/*
 *.pkg
 *.wuhb
 *.zip
+launcher/node_modules/
+launcher/dist/
+launcher/src-tauri/target/
+launcher/src-tauri/gen/

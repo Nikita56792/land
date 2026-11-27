@@ -9,6 +9,7 @@
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Архитектура доменов, DNS в Cloudflare, схема РФ (`parhelio.ru`) ↔ Мир (`global.parhelio.ru`), SmartMirror (`parhelio-dl.s3.cloud.ru` ↔ `dl.parhelio.ru`), SSL и защита от блокировок ТСПУ |
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Прямой деплой сайта и файлов с Mac **без GitHub** (`scripts/deploy-site.sh`, `scripts/sync-mirrors.sh`, `wrangler.jsonc`, `rclone`), настройка секретов и план восстановления, если GitHub-репозиторий будет удалён |
 | [RELEASES_AND_MIRRORS.md](./RELEASES_AND_MIRRORS.md) | Полный реестр всех 5 портов Wii U и 4 приложений Mac, локальные пути исходных сборок, форматы `.wuhb` и WUP Installer `.zip`, точные URL зеркал и лимиты Free Tier |
+| [LAUNCHER.md](./LAUNCHER.md) | Архитектура **Parhelio Launcher** (Rust + Tauri v2), 8-поточный загрузчик и failover Cloud.ru ↔ R2, динамический `launcher-catalog.json`, автоопределение SD-карт (macOS/Windows/Linux), локальная сборка и публикация релизов |
 | [CONTENT_AND_TECH_NOTES.md](./CONTENT_AND_TECH_NOTES.md) | Фактические инженерные спецификации всех 5 портов Wii U (Minecraft, Buckshot Roulette, Slime Rancher, Subnautica, Animal Crossing: New Horizons) и 4 приложений Mac |
 
 ## Быстрые команды (с Mac, без GitHub)

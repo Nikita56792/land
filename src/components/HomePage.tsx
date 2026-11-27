@@ -3,18 +3,178 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  CheckCircle2,
   ChevronDown,
   Download,
+  FolderOutput,
   Gamepad2,
   Github,
+  HardDrive,
   Laptop,
   Monitor,
   Newspaper,
+  ShieldCheck,
+  Sparkles,
+  Zap,
 } from 'lucide-react';
 import { MAC_APPS, MacApp, WIIU_PORTS } from '../data/catalog';
 import { appNotes, art, formatDate, stories, updates } from '../data/editorial';
 import { useSmartMirror } from '../lib/mirrors';
 import { FoveaVectorMark, KrakenVectorMark } from './AppVisuals';
+import { MirrorSelectorBar } from './DownloadButtons';
+
+const LAUNCHER_DOWNLOADS = [
+  {
+    id: 'macos',
+    os: 'macOS',
+    arch: 'arm64',
+    ext: '.dmg',
+    fileName: 'Parhelio-Launcher-1.0.0-macos-arm64.dmg',
+    primary: true,
+  },
+  {
+    id: 'windows',
+    os: 'Windows',
+    arch: 'x64',
+    ext: '.exe',
+    fileName: 'Parhelio-Launcher-1.0.0-windows-x64.exe',
+    primary: false,
+  },
+  {
+    id: 'linux',
+    os: 'Linux',
+    arch: 'x64',
+    ext: '.AppImage',
+    fileName: 'Parhelio-Launcher-1.0.0-linux-x64.AppImage',
+    primary: false,
+  },
+] as const;
+
+function LauncherOsGlyph({ os }: { os: 'macos' | 'windows' | 'linux' }) {
+  if (os === 'macos') {
+    return (
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.33c.64-.78 1.08-1.86.96-2.94-.93.04-2.06.62-2.72 1.4-.58.68-1.1 1.78-.96 2.84 1.04.08 2.09-.52 2.72-1.3" />
+      </svg>
+    );
+  }
+  if (os === 'windows') {
+    return (
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+        <path d="M3 5.55 10.35 4.5v7.05H3V5.55Zm8.45-1.2L21 3v8.55h-9.55V4.35ZM3 12.45h7.35v7.05L3 18.45v-6Zm8.45 0H21V21l-9.55-1.35v-7.2Z" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="3" />
+      <path d="m8 10 3 2.5L8 15" />
+      <path d="M13 15h3" />
+    </svg>
+  );
+}
+
+function LauncherUiMockup() {
+  return (
+    <div className="launcher-mockup" aria-hidden="true">
+      <div className="launcher-mockup-chrome">
+        <div className="launcher-mockup-dots">
+          <i className="dot-r" />
+          <i className="dot-y" />
+          <i className="dot-g" />
+        </div>
+        <span className="launcher-mockup-title">Parhelio Launcher · v1.0.0</span>
+        <span className="launcher-mockup-live">
+          <Zap size={12} />
+          <span>8 потоков · Авто-зеркало</span>
+        </span>
+      </div>
+
+      {/* 3-Step balenaEtcher-inspired Pipeline */}
+      <div className="launcher-steps">
+        <div className="launcher-step is-done">
+          <span className="launcher-step-num">1</span>
+          <div className="launcher-step-copy">
+            <strong>1. Игра</strong>
+            <span>Minecraft v688</span>
+          </div>
+          <CheckCircle2 size={15} className="launcher-step-check" />
+        </div>
+
+        <span className="launcher-step-arrow" aria-hidden="true">
+          <ArrowRight size={14} />
+        </span>
+
+        <div className="launcher-step is-done">
+          <span className="launcher-step-num">2</span>
+          <div className="launcher-step-copy">
+            <strong>2. SD-карта</strong>
+            <span>WIIU_SD · 64 ГБ</span>
+          </div>
+          <HardDrive size={15} className="launcher-step-icon" />
+        </div>
+
+        <span className="launcher-step-arrow" aria-hidden="true">
+          <ArrowRight size={14} />
+        </span>
+
+        <div className="launcher-step is-active">
+          <span className="launcher-step-num">3</span>
+          <div className="launcher-step-copy">
+            <strong>3. Установка</strong>
+            <span>Раскладка на SD</span>
+          </div>
+          <Sparkles size={15} className="launcher-step-spark" />
+        </div>
+      </div>
+
+      {/* Live Multi-Stream Transfer Preview */}
+      <div className="launcher-transfer-card">
+        <div className="launcher-transfer-head">
+          <div>
+            <span className="launcher-transfer-game">Minecraft: Wii U Edition</span>
+            <span className="launcher-transfer-sub">
+              Cloud.ru РФ ↔ Cloudflare R2 · 8 HTTP Range потоков
+            </span>
+          </div>
+          <span className="launcher-speed-badge">48.6 МБ/с</span>
+        </div>
+
+        <div className="launcher-progress-track">
+          <div className="launcher-progress-fill" />
+        </div>
+
+        <div className="launcher-transfer-foot">
+          <span>Скачано 1.09 / 1.41 ГБ · SHA-256 проверка</span>
+          <span>77%</span>
+        </div>
+      </div>
+
+      {/* Auto-Detected SD Target Paths */}
+      <div className="launcher-path-pills">
+        <div className="launcher-path-pill">
+          <span className="launcher-path-tag tag-wuhb">Aroma .wuhb</span>
+          <code>sd:/wiiu/apps/</code>
+        </div>
+        <div className="launcher-path-pill">
+          <span className="launcher-path-tag tag-wup">WUP Installer</span>
+          <code>sd:/install/&lt;Игра&gt;/</code>
+        </div>
+      </div>
+
+      <div className="launcher-mockup-footer">
+        <span>
+          <ShieldCheck size={14} />
+          <span>Автоопределение SD и безопасное извлечение</span>
+        </span>
+        <span className="launcher-eject-chip">
+          <FolderOutput size={13} />
+          <span>Своя папка</span>
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export function AppSquircle({
   app,
@@ -299,10 +459,24 @@ export function HomePage() {
                 экран Wii U GamePad.
               </p>
             </div>
-            <a className="section-more-link" href="#games">
-              <span>Все порты и пайплайн</span>
-              <ArrowUpRight size={17} />
-            </a>
+            <div className="section-heading-actions">
+              <button
+                type="button"
+                className="section-launcher-jump"
+                onClick={() =>
+                  document
+                    .getElementById('home-launcher')
+                    ?.scrollIntoView({ behavior: 'smooth' })
+                }
+              >
+                <Download size={15} />
+                <span>Parhelio Launcher</span>
+              </button>
+              <a className="section-more-link" href="#games">
+                <span>Все порты и пайплайн</span>
+                <ArrowUpRight size={17} />
+              </a>
+            </div>
           </div>
 
           <div className="ports-grid">
@@ -348,6 +522,88 @@ export function HomePage() {
                 </a>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 1.5: Parhelio Launcher (Apple + balenaEtcher + RPCS3 Hybrid Showcase) */}
+      <section
+        className="home-section home-launcher-band"
+        id="home-launcher"
+        aria-label="Parhelio Launcher — загрузка и установка игр Wii U"
+      >
+        <div className="container">
+          <div className="launcher-showcase-card">
+            <div className="launcher-showcase-copy">
+              <span className="launcher-eyebrow">
+                <Zap size={14} />
+                <span>НАТИВНЫЙ ЛАУНЧЕР · RUST + TAURI · БЕЗ РЕГИСТРАЦИИ</span>
+              </span>
+
+              <h2>Parhelio Launcher</h2>
+
+              <p className="launcher-lead">
+                Скачивайте все порты Wii U без регистрации на максимальной
+                скорости — 8 параллельных потоков с автовыбором и
+                автопереключением между <strong>Cloud.ru РФ</strong> и{' '}
+                <strong>Cloudflare R2 Мир</strong>.
+              </p>
+
+              <ul className="launcher-feature-list">
+                <li>
+                  <CheckCircle2 size={17} />
+                  <span>
+                    Автоопределение SD-карты Wii U и точная раскладка:{' '}
+                    <code>.wuhb</code> → <code>sd:/wiiu/apps/</code>,{' '}
+                    <strong>WUP Installer</strong> →{' '}
+                    <code>sd:/install/&lt;Игра&gt;/</code>.
+                  </span>
+                </li>
+                <li>
+                  <HardDrive size={17} />
+                  <span>
+                    Можно выбрать любую папку вручную, а после записи —
+                    безопасно извлечь SD-карту в один клик.
+                  </span>
+                </li>
+              </ul>
+
+              <div
+                className="launcher-os-grid"
+                role="group"
+                aria-label="Скачать Parhelio Launcher"
+              >
+                {LAUNCHER_DOWNLOADS.map((dl) => (
+                  <a
+                    key={dl.id}
+                    href={getReleaseUrl(dl.fileName)}
+                    download={dl.fileName}
+                    className={`launcher-os-btn ${
+                      dl.primary ? 'launcher-os-btn-primary' : ''
+                    }`}
+                  >
+                    <span className="launcher-os-icon">
+                      <LauncherOsGlyph os={dl.id} />
+                    </span>
+                    <span className="launcher-os-meta">
+                      <strong>{dl.os}</strong>
+                      <small>
+                        {dl.arch} · {dl.ext}
+                      </small>
+                    </span>
+                    <Download size={15} className="launcher-os-dl" />
+                  </a>
+                ))}
+              </div>
+
+              <div className="launcher-mirror-wrap">
+                <MirrorSelectorBar />
+              </div>
+            </div>
+
+            <div className="launcher-showcase-visual">
+              <LauncherUiMockup />
+            </div>
           </div>
         </div>
       </section>

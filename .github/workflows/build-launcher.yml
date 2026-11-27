@@ -1,0 +1,141 @@
+name: Build Parhelio Launcher
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "launcher/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-launcher-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build (${{ matrix.os_label }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            os_label: macOS Apple Silicon
+            target: aarch64-apple-darwin
+            bundle: dmg
+            artifact_name: Parhelio-Launcher-1.0.0-macos-arm64.dmg
+          - os: windows-latest
+            os_label: Windows x64
+            target: x86_64-pc-windows-msvc
+            bundle: nsis
+            artifact_name: Parhelio-Launcher-1.0.0-windows-x64.exe
+          - os: ubuntu-latest
+            os_label: Linux x64
+            target: x86_64-unknown-linux-gnu
+            bundle: appimage
+            artifact_name: Parhelio-Launcher-1.0.0-linux-x64.AppImage
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: launcher/package-lock.json
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache Rust build artifacts
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: launcher/src-tauri -> target
+
+      - name: Install Linux Tauri system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libssl-dev \
+            pkg-config
+
+      - name: Install launcher npm dependencies
+        working-directory: launcher
+        run: npm ci
+
+      - name: Build Tauri launcher (${{ matrix.target }})
+        working-directory: launcher
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+          NO_STRIP: "true"
+        run: npm run tauri build -- --target ${{ matrix.target }} --bundles ${{ matrix.bundle }}
+
+      - name: Normalize release artifact (macOS / Linux)
+        if: runner.os != 'Windows'
+        shell: bash
+        working-directory: launcher
+        run: |
+          set -euo pipefail
+          mkdir -p dist-release
+          BUNDLE_DIR="src-tauri/target/${{ matrix.target }}/release/bundle"
+
+          if [[ "${{ matrix.bundle }}" == "dmg" ]]; then
+            SRC_FILE="$(find "$BUNDLE_DIR/dmg" -maxdepth 1 -type f -name '*.dmg' | head -n 1)"
+          else
+            SRC_FILE="$(find "$BUNDLE_DIR/appimage" -maxdepth 1 -type f -name '*.AppImage' | head -n 1)"
+          fi
+
+          if [[ -z "${SRC_FILE:-}" || ! -f "$SRC_FILE" ]]; then
+            echo "ERROR: Expected bundle not found in $BUNDLE_DIR" >&2
+            find "$BUNDLE_DIR" -maxdepth 3 -ls || true
+            exit 1
+          fi
+
+          cp "$SRC_FILE" "dist-release/${{ matrix.artifact_name }}"
+          (cd dist-release && shasum -a 256 "${{ matrix.artifact_name }}" > "${{ matrix.artifact_name }}.sha256")
+          ls -lh dist-release
+
+      - name: Normalize release artifact (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: launcher
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force -Path "dist-release" | Out-Null
+          $bundleDir = "src-tauri/target/${{ matrix.target }}/release/bundle/nsis"
+          $srcFile = Get-ChildItem -Path $bundleDir -Filter "*.exe" | Select-Object -First 1
+
+          if (-not $srcFile) {
+            Write-Error "Expected NSIS installer .exe not found in $bundleDir"
+            exit 1
+          }
+
+          $dstPath = "dist-release/${{ matrix.artifact_name }}"
+          Copy-Item -Path $srcFile.FullName -Destination $dstPath -Force
+          $hash = (Get-FileHash -Path $dstPath -Algorithm SHA256).Hash.ToLower()
+          "$hash  ${{ matrix.artifact_name }}" | Out-File -FilePath "$dstPath.sha256" -Encoding ascii
+          Get-ChildItem -Path "dist-release"
+
+      - name: Upload normalized artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: |
+            launcher/dist-release/${{ matrix.artifact_name }}
+            launcher/dist-release/${{ matrix.artifact_name }}.sha256
+          if-no-files-found: error
+          retention-days: 30
