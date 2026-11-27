@@ -4892,3 +4892,61 @@ section[id] {
 .tech-theme-subnautica .tech-solution-card p {
   color: #bae6fd;
 }
+
+/* ── Parhelio Luminous Optical Vector Hero ──────────────────────────────── */
+.parhelio-hero-art {
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 20px 44px rgba(15, 23, 42, 0.28));
+}
+
+.parhelio-hero-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.ph-orbit-slow {
+  transform-origin: 270px 220px;
+  animation: phSpinSlow 42s linear infinite;
+}
+
+.ph-core-float {
+  animation: phBob 6s ease-in-out infinite;
+}
+
+.ph-badge-a {
+  animation: phBob 7s ease-in-out -1.5s infinite;
+}
+
+.ph-badge-b {
+  animation: phBob 7.5s ease-in-out -3.8s infinite;
+}
+
+.ph-flare-left,
+.ph-flare-right {
+  animation: phPulse 4.6s ease-in-out infinite;
+}
+
+.ph-flare-right {
+  animation-delay: -2.3s;
+}
+
+@keyframes phSpinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes phBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes phPulse {
+  0%, 100% { opacity: 0.88; }
+  50% { opacity: 1; }
+}
