@@ -9,7 +9,7 @@
 | Зеркало | Провайдер / Бакет | Публичный URL | Free Tier | Занято сейчас |
 | :--- | :--- | :--- | :--- | :--- |
 | **РФ / СНГ** | Cloud.ru Evolution (`parhelio-ru-storage`, домен `parhelio-dl`) | `https://parhelio-dl.s3.cloud.ru` | **15 ГБ** хранения · **10 ТБ/мес** трафика | **~5.47 ГБ** (36%) |
-| **Мир** | Cloudflare R2 (`parhelio-wstorage`, EEUR) | `https://dl.parhelio.ru` | **10 ГБ** хранения · **безлимит** трафика (\$0 egress) | **~5.47 ГБ** (55%) |
+| **Мир** | Cloudflare R2 (`parhelio-wstorage`, EEUR) | `https://dl.parhelio.ru` | **10 ГБ** хранения · **безлимит** трафика ($0 egress) | **~5.47 ГБ** (55%) |
 | **Сайт РФ** | Yandex Object Storage (`parhelio.ru`) | `https://parhelio.ru` | ~2–5 ₽/мес (~10 МБ статики) | **~15 МБ** |
 | **Сайт Мир** | Cloudflare Workers Static Assets (`parhelio`) | `https://global.parhelio.ru` | Free Plan (100k req/day) | **~15 МБ** |
 
