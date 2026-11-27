@@ -8,8 +8,8 @@
 
 | Зеркало | Провайдер / Бакет | Публичный URL | Free Tier | Занято сейчас |
 | :--- | :--- | :--- | :--- | :--- |
-| **РФ / СНГ** | Cloud.ru Evolution (`parhelio-ru-storage`, домен `parhelio-dl`) | `https://parhelio-dl.s3.cloud.ru` | **15 ГБ** хранения · **10 ТБ/мес** трафика | **~5.38 ГБ** (36%) |
-| **Мир** | Cloudflare R2 (`parhelio-wstorage`, EEUR) | `https://dl.parhelio.ru` | **10 ГБ** хранения · **безлимит** трафика ($0 egress) | **~5.38 ГБ** (54%) |
+| **РФ / СНГ** | Cloud.ru Evolution (`parhelio-ru-storage`, домен `parhelio-dl`) | `https://parhelio-dl.s3.cloud.ru` | **15 ГБ** хранения · **10 ТБ/мес** трафика | **~5.47 ГБ** (36%) |
+| **Мир** | Cloudflare R2 (`parhelio-wstorage`, EEUR) | `https://dl.parhelio.ru` | **10 ГБ** хранения · **безлимит** трафика (\$0 egress) | **~5.47 ГБ** (55%) |
 | **Сайт РФ** | Yandex Object Storage (`parhelio.ru`) | `https://parhelio.ru` | ~2–5 ₽/мес (~10 МБ статики) | **~15 МБ** |
 | **Сайт Мир** | Cloudflare Workers Static Assets (`parhelio`) | `https://global.parhelio.ru` | Free Plan (100k req/day) | **~15 МБ** |
 
@@ -39,6 +39,14 @@
 | **Kraken** | `v0.4.0` | `Kraken-0.4.0.pkg` | `9.9 МБ` (`10,414,255 B`) | `https://github.com/Nikita56792/kraken` | `/Users/nikitasyzdykov/Kraken Disk/Desktop/kraken/dist/Kraken-0.4.0.pkg` |
 | **Real3D** | `v1.2.0` | `Real3D-1.2.0.dmg` | `857 МБ` (`898,500,428 B`) | `https://github.com/Nikita56792/real3d` | `/Users/nikitasyzdykov/Kraken Disk/Desktop/real3d/checkpoints/Real3D-1.2.0.dmg` |
 | **Fovea** | `v1.0.0` | `Fovea-1.0.0.dmg` | `164 МБ` (`171,544,377 B`) | `https://github.com/Nikita56792/fovea` | `/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/eye_track/build/Fovea-1.0.0.dmg` |
+
+### Parhelio Launcher (нативный загрузчик, Rust + Tauri v2)
+
+| Платформа | Версия | Файл в `/releases/` | Размер | Формат / Архитектура | Сборка |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **macOS** | `v1.0.0` | `Parhelio-Launcher-1.0.0-macos-arm64.dmg` | `4.45 МБ` (`4,663,083 B`) | Apple Silicon (`arm64`) `.dmg` | Локально (`tauri build --bundles dmg`) + GitHub Actions |
+| **Windows** | `v1.0.0` | `Parhelio-Launcher-1.0.0-windows-x64.exe` | `3.11 МБ` (`3,266,052 B`) | `x86_64` NSIS Installer `.exe` | GitHub Actions (`windows-latest`) |
+| **Linux** | `v1.0.0` | `Parhelio-Launcher-1.0.0-linux-x64.AppImage` | `84.1 МБ` (`88,185,336 B`) | `x86_64` portable `.AppImage` | GitHub Actions (`ubuntu-latest`) |
 
 ---
 
