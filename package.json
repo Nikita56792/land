@@ -7,8 +7,8 @@
     "dev": "vite",
     "dev:wiki": "npm --prefix wiki run start",
     "build:site": "tsc -b && vite build",
-    "build:wiki": "npm --prefix wiki run build",
-    "build": "tsc -b && vite build && npm --prefix wiki run build",
+    "build:wiki": "([ -d wiki/node_modules ] || npm --prefix wiki ci) && npm --prefix wiki run build",
+    "build": "tsc -b && vite build && npm run build:wiki",
     "preview": "vite preview"
   },
   "dependencies": {
