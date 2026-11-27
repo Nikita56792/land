@@ -4,10 +4,11 @@ import { MAC_APPS, STUDIO_INFO, WIIU_PORTS } from '../data/catalog';
 import { stories } from '../data/editorial';
 
 const NAV_ITEMS = [
-  { key: 'home', label: 'Главная' },
-  { key: 'games', label: 'Игры Wii U' },
-  { key: 'apps', label: 'Приложения Mac' },
-  { key: 'updates', label: 'Обновления' },
+  { key: 'home', label: 'Главная', href: '#home' },
+  { key: 'games', label: 'Игры Wii U', href: '#games' },
+  { key: 'apps', label: 'Приложения Mac', href: '#apps' },
+  { key: 'docs', label: 'Документация', href: './docs/' },
+  { key: 'updates', label: 'Обновления', href: '#updates' },
 ] as const;
 
 export function BrandMark({ light = false }: { light?: boolean }) {
@@ -107,7 +108,7 @@ export function SiteHeader({
               ref={(node) => {
                 linkRefs.current[item.key] = node;
               }}
-              href={`#${item.key}`}
+              href={item.href}
               className={section === item.key ? 'is-current' : ''}
               aria-current={section === item.key ? 'page' : undefined}
             >
@@ -139,7 +140,7 @@ export function SiteHeader({
           {NAV_ITEMS.map((item) => (
             <a
               key={item.key}
-              href={`#${item.key}`}
+              href={item.href}
               className={section === item.key ? 'is-current' : ''}
               onClick={() => setMenuOpen(false)}
             >
@@ -243,7 +244,7 @@ export function SiteFooter({
             <ul>
               {NAV_ITEMS.map((item) => (
                 <li key={item.key}>
-                  <a href={`#${item.key}`}>{item.label}</a>
+                  <a href={item.href}>{item.label}</a>
                 </li>
               ))}
               <li>

@@ -1,0 +1,127 @@
+/**
+ * Parhelio Technical Wiki — Docusaurus Infima theme customization
+ * Neutral, readable technical typography inspired by Docusaurus + Copetti Architecture of Consoles.
+ */
+
+:root {
+  --ifm-color-primary: #2952cc;
+  --ifm-color-primary-dark: #2347b4;
+  --ifm-color-primary-darker: #1f3fa3;
+  --ifm-color-primary-darkest: #193385;
+  --ifm-color-primary-light: #3b63db;
+  --ifm-color-primary-lighter: #4b70e0;
+  --ifm-color-primary-lightest: #6e8ce8;
+
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, sans-serif;
+  --ifm-font-family-monospace: 'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+  --ifm-code-font-size: 90%;
+  --ifm-line-height-base: 1.72;
+  --ifm-heading-font-weight: 700;
+  --ifm-navbar-height: 64px;
+  --ifm-global-radius: 10px;
+  --docusaurus-highlighted-code-line-bg: rgba(41, 82, 204, 0.08);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #6ea8ff;
+  --ifm-color-primary-dark: #4e93ff;
+  --ifm-color-primary-darker: #3e89ff;
+  --ifm-color-primary-darkest: #0f6aff;
+  --ifm-color-primary-light: #8ebdff;
+  --ifm-color-primary-lighter: #9ec7ff;
+  --ifm-color-primary-lightest: #cde2ff;
+  --ifm-background-color: #0d1117;
+  --ifm-background-surface-color: #131922;
+  --docusaurus-highlighted-code-line-bg: rgba(110, 168, 255, 0.14);
+}
+
+.navbar {
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+  box-shadow: none;
+  backdrop-filter: saturate(180%) blur(14px);
+}
+
+.navbar__title {
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  font-size: 0.94rem;
+}
+
+.navbar__logo img {
+  width: 30px;
+  height: 30px;
+}
+
+.markdown h1:first-child {
+  font-size: 2.15rem;
+  letter-spacing: -0.025em;
+  margin-bottom: 1rem;
+}
+
+.markdown h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+  padding-bottom: 0.35rem;
+  margin-top: 2.35rem;
+}
+
+.markdown h3 {
+  font-size: 1.18rem;
+  margin-top: 1.6rem;
+}
+
+.markdown table {
+  display: table;
+  width: 100%;
+  font-size: 0.92rem;
+  border-collapse: collapse;
+}
+
+.markdown table th {
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Copetti-inspired hardware spec / memory map callout blocks */
+.docusaurus-mermaid-container {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 12px;
+  padding: 1.15rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.docusaurus-mermaid-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Hide external-link arrow on internal Parhelio SPA nav items */
+.navbar__item svg[class*="iconExternalLink"] {
+  display: none;
+}
+
+article {
+  max-width: 860px;
+}
+
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--ifm-toc-border-color) !important;
+}
+
+.menu__link {
+  font-size: 0.91rem;
+  line-height: 1.4;
+}
+
+.table-of-contents__link {
+  font-size: 0.82rem;
+}
+
+.footer--dark {
+  background-color: #0b101b;
+  border-top: 1px solid rgba(148, 163, 184, 0.14);
+}

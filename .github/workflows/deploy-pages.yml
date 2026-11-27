@@ -29,9 +29,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci && npm --prefix wiki ci
 
-      - name: Build site
+      - name: Build site and Docusaurus wiki
         run: npm run build
 
       - name: Upload dist artifact
@@ -80,9 +80,11 @@ jobs:
           aws s3 sync ./dist s3://parhelio.ru/ \
             --endpoint-url https://storage.yandexcloud.net \
             --delete \
-            --exclude "index.html" \
+            --exclude "*.html" \
             --cache-control "public, max-age=31536000, immutable"
-          aws s3 cp ./dist/index.html s3://parhelio.ru/index.html \
+          aws s3 sync ./dist s3://parhelio.ru/ \
             --endpoint-url https://storage.yandexcloud.net \
+            --exclude "*" \
+            --include "*.html" \
             --content-type "text/html; charset=utf-8" \
             --cache-control "public, max-age=0, must-revalidate"

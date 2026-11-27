@@ -38,15 +38,19 @@ if [[ $DO_YANDEX -eq 1 ]]; then
   echo "==> [2/3] Deploying directly to Yandex Object Storage (https://parhelio.ru)..."
   command -v rclone >/dev/null 2>&1 || { echo "rclone not found. Run: brew install rclone" >&2; exit 1; }
   rclone sync "$ROOT/dist" "yandex:${YANDEX_BUCKET}" \
-    --exclude "index.html" \
+    --exclude "*.html" \
     --header-upload "Cache-Control: public, max-age=31536000, immutable" \
     --transfers 8 \
     --fast-list \
     --stats-one-line
 
-  rclone copyto "$ROOT/dist/index.html" "yandex:${YANDEX_BUCKET}/index.html" \
+  rclone copy "$ROOT/dist" "yandex:${YANDEX_BUCKET}" \
+    --include "*.html" \
     --header-upload "Content-Type: text/html; charset=utf-8" \
-    --header-upload "Cache-Control: public, max-age=0, must-revalidate"
+    --header-upload "Cache-Control: public, max-age=0, must-revalidate" \
+    --transfers 8 \
+    --fast-list \
+    --stats-one-line
   echo "    ✓ Yandex Object Storage updated (parhelio.ru)"
 fi
 
