@@ -13,6 +13,8 @@ import {
   X,
 } from 'lucide-react';
 import { MacApp, PlatformPackage } from '../data/catalog';
+import { useSmartMirror } from '../lib/mirrors';
+import { MirrorSelectorBar } from './DownloadButtons';
 import { AppSquircle } from './HomePage';
 
 /* ── Minimalist OS Brand Glyphs ─────────────────────────────────────────── */
@@ -268,27 +270,12 @@ function OsDownloadPill({
    RPCS3-STYLE MULTI-OS DOWNLOADS SECTION FOR EACH APP
    ═══════════════════════════════════════════════════════════════════════════ */
 export function AppDownloadsSection({ app }: { app: MacApp }) {
-  const [serverReady, setServerReady] = useState(false);
+  const { getReleaseUrl } = useSmartMirror();
   const [soonInfo, setSoonInfo] = useState<{
     appName: string;
     osLabel: string;
     archLabel: string;
   } | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setServerReady(false);
-    fetch(app.mirrors.serverPath, { method: 'HEAD', signal: controller.signal })
-      .then((res) => {
-        if (!controller.signal.aborted) {
-          setServerReady(
-            res.ok && !res.headers.get('content-type')?.includes('text/html')
-          );
-        }
-      })
-      .catch(() => {});
-    return () => controller.abort();
-  }, [app.mirrors.serverPath]);
 
   const releasesUrl = app.mirrors.githubRepoUrl
     ? `${app.mirrors.githubRepoUrl}/releases`
@@ -298,7 +285,10 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
     : null;
 
   const os = app.platforms;
-  const macArmUrl = os?.macosArm64?.url ?? app.mirrors.githubReleaseUrl;
+  const cloudUrl = app.mirrors.cloudFileName
+    ? getReleaseUrl(app.mirrors.cloudFileName)
+    : null;
+  const macArmUrl = os?.macosArm64?.url ?? cloudUrl ?? app.mirrors.githubReleaseUrl;
   const macArmSize = os?.macosArm64?.sizeLabel ?? app.mirrors.sizeLabel;
 
   const macPackages: PlatformPackage[] = [
@@ -307,6 +297,7 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
       label: 'Скачать для arm64',
       sizeLabel: macArmSize,
       url: macArmUrl,
+      fileName: app.mirrors.cloudFileName || app.mirrors.serverFileName,
     },
     os?.macosX64 ?? {
       arch: 'x64',
@@ -393,14 +384,15 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
           </div>
 
           <div className="latest-build-right">
-            {serverReady && (
+            {app.mirrors.githubReleaseUrl && (
               <a
                 className="btn-tactile btn-tactile-blue"
-                href={app.mirrors.serverPath}
-                download={app.mirrors.serverFileName}
+                href={app.mirrors.githubReleaseUrl}
+                target="_blank"
+                rel="noreferrer"
               >
                 <HardDrive size={16} />
-                <span>Зеркало сервера</span>
+                <span>Зеркало GitHub</span>
               </a>
             )}
             {app.mirrors.githubRepoUrl && (
@@ -416,6 +408,10 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
               </a>
             )}
           </div>
+        </div>
+
+        <div className="app-mirror-strip">
+          <MirrorSelectorBar />
         </div>
 
         {/* 3-Column OS Cards: Windows · Linux · macOS (RPCS3 style!) */}

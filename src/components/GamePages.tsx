@@ -15,7 +15,7 @@ import {
   Sparkles,
   Waves,
 } from 'lucide-react';
-import { GamePort } from '../data/catalog';
+import { GamePort, TechSolution } from '../data/catalog';
 import {
   art,
   GameFaq,
@@ -183,6 +183,37 @@ function FaqAccordion({
   );
 }
 
+/* ── Shared Engineering / Implemented Technologies Grid ── */
+function TechSolutionsBlock({
+  items,
+  theme,
+}: {
+  items: TechSolution[];
+  theme: 'minecraft' | 'buckshot' | 'slime' | 'subnautica';
+}) {
+  if (!items.length) return null;
+  return (
+    <div className={`tech-solutions-block tech-theme-${theme}`}>
+      <div className="tech-solutions-head">
+        <span className="tech-solutions-kicker">
+          <Cpu size={14} />
+          <span>Инженерные решения и технологии</span>
+        </span>
+        <h3>Что внедрено внутри порта</h3>
+      </div>
+      <div className="tech-solutions-grid">
+        {items.map((sol) => (
+          <article key={sol.title} className="tech-solution-card">
+            <span className="tech-solution-tag">{sol.tag}</span>
+            <h4>{sol.title}</h4>
+            <p>{sol.detail}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Stepped Pixel Block Divider (Minecraft.net signature!) ── */
 function PixelDivider({
   topColor,
@@ -297,7 +328,7 @@ function MinecraftPage({ game }: { game: GamePort }) {
                 }
               >
                 <Download size={18} />
-                <span>СКАЧАТЬ .WUHB (1.41 ГБ)</span>
+                <span>СКАЧАТЬ (.WUHB / WUP)</span>
               </button>
               <button
                 type="button"
@@ -358,6 +389,8 @@ function MinecraftPage({ game }: { game: GamePort }) {
               ))}
             </div>
           </div>
+
+          <TechSolutionsBlock items={game.techSolutions} theme="minecraft" />
         </div>
       </section>
 
@@ -395,16 +428,25 @@ function MinecraftPage({ game }: { game: GamePort }) {
           <div className="mc-download-card">
             <div className="mc-download-left">
               <span className="mc-release-badge">
-                AROMA .WUHB · ГОТОВЫЙ РЕЛИЗ v1.0
+                UPDATE v688 · AROMA .WUHB + WUP INSTALLER
               </span>
               <h2 className="mc-pixel-heading">СКАЧАТЬ СБОРКУ</h2>
               <p>
-                Самодостаточный файл <code>.wuhb</code> для консоли Nintendo Wii
-                U со средой Aroma. Доступно прямое скачивание с GitHub Releases
-                и локального сервера.
+                Доступны оба формата: самодостаточный <code>.wuhb</code> для
+                прямого запуска с SD под Aroma (1.41 ГБ) и полный пакет{' '}
+                <strong>WUP Installer GX2</strong> (1.44 ГБ) для установки в
+                NAND/USB.
               </p>
               <DownloadButtons mirrors={game.mirrors} variant="minecraft" />
-              <CopyPathPill value={game.installPath} />
+              <div className="path-pills-stack">
+                <CopyPathPill value={game.installPath} label="Путь для Aroma (.wuhb)" />
+                {game.secondaryInstallPath && (
+                  <CopyPathPill
+                    value={game.secondaryInstallPath}
+                    label={game.secondaryInstallLabel || 'Путь для WUP Installer GX2'}
+                  />
+                )}
+              </div>
             </div>
 
             <div className="mc-download-right">
@@ -464,7 +506,7 @@ function BuckshotPage({ game }: { game: GamePort }) {
           <div className="br-hero-scrim" />
           <div className="container br-hero-inner">
             <div className="game-top-bar game-top-bar-end">
-              <span className="br-stamp">WII U NATIVE PORT // 60 FPS</span>
+              <span className="br-stamp">BUILD 116 (v44) // C++20 + GX2 · 30 FPS</span>
             </div>
 
             <div className="br-hero-lockup">
@@ -481,24 +523,24 @@ function BuckshotPage({ game }: { game: GamePort }) {
                   className="br-btn br-btn-primary"
                   onClick={() =>
                     document
-                      .getElementById('br-dual')
+                      .getElementById('br-release')
                       ?.scrollIntoView({ behavior: 'smooth' })
                   }
                 >
-                  <Gamepad2 size={16} />
-                  <span>Режим 1v1 (TV + GamePad)</span>
+                  <Download size={16} />
+                  <span>Скачать .wuhb / WUP</span>
                 </button>
                 <button
                   type="button"
                   className="br-btn"
                   onClick={() =>
                     document
-                      .getElementById('br-release')
+                      .getElementById('br-dual')
                       ?.scrollIntoView({ behavior: 'smooth' })
                   }
                 >
-                  <Download size={16} />
-                  <span>Статус сборки</span>
+                  <Gamepad2 size={16} />
+                  <span>Режим 1v1 (TV + GamePad)</span>
                 </button>
               </div>
             </div>
@@ -532,10 +574,12 @@ function BuckshotPage({ game }: { game: GamePort }) {
                   светом подпольного клуба.
                 </p>
                 <p>
-                  На Nintendo Wii U игра работает нативно в 60 FPS без эмуляции
-                  скриптов и раскрывает главное преимущество консоли —{' '}
+                  На Nintendo Wii U игра работает на собственном C++20/WUT
+                  рантайме без движка Godot (720p→1080p AMD CAS, 28 нативных
+                  шейдеров GX2, звук AX IMA-ADPCM) и раскрывает главное
+                  преимущество консоли —{' '}
                   <strong>честную локальную дуэль вдвоём</strong>, где у
-                  второго игрока полностью отдельный экран в руках.
+                  второго игрока полностью отдельный экран и личный звук.
                 </p>
 
                 <h3 className="br-subhead">ОСОБЕННОСТИ ПОРТА:</h3>
@@ -609,6 +653,8 @@ function BuckshotPage({ game }: { game: GamePort }) {
                 </div>
               ))}
             </div>
+
+            <TechSolutionsBlock items={game.techSolutions} theme="buckshot" />
           </div>
         </section>
 
@@ -634,10 +680,22 @@ function BuckshotPage({ game }: { game: GamePort }) {
             <div className="br-dotted-rule" />
             <div className="br-release-grid">
               <div>
-                <span className="br-tag-amber">BUILD STATUS // WII U</span>
-                <h2>Загрузка и релиз</h2>
+                <span className="br-tag-amber">BUILD 116 (v44) // .WUHB + WUP</span>
+                <h2>Скачать сборку</h2>
                 <DownloadButtons mirrors={game.mirrors} variant="buckshot" />
-                <CopyPathPill value={game.installPath} dark />
+                <div className="path-pills-stack">
+                  <CopyPathPill value={game.installPath} label="Путь для Aroma (.wuhb)" dark />
+                  {game.secondaryInstallPath && (
+                    <CopyPathPill
+                      value={game.secondaryInstallPath}
+                      label={game.secondaryInstallLabel || 'Путь для WUP Installer GX2'}
+                      dark
+                    />
+                  )}
+                </div>
+                {game.notice && (
+                  <p className="game-notice-box game-notice-dark">{game.notice}</p>
+                )}
               </div>
               <div className="br-telemetry-box">
                 <dl className="br-dl">
@@ -729,24 +787,24 @@ function SlimeRancherPage({ game }: { game: GamePort }) {
                   className="sr-btn sr-btn-pink"
                   onClick={() =>
                     document
-                      .getElementById('sr-media')
+                      .getElementById('sr-release')
                       ?.scrollIntoView({ behavior: 'smooth' })
                   }
                 >
-                  <Play size={16} />
-                  <span>Смотреть геймплей</span>
+                  <Download size={16} />
+                  <span>Скачать WUP (902 МБ)</span>
                 </button>
                 <button
                   type="button"
                   className="sr-btn sr-btn-white"
                   onClick={() =>
                     document
-                      .getElementById('sr-release')
+                      .getElementById('sr-media')
                       ?.scrollIntoView({ behavior: 'smooth' })
                   }
                 >
-                  <Download size={16} />
-                  <span>Статус сборки</span>
+                  <Play size={16} />
+                  <span>Смотреть геймплей</span>
                 </button>
               </div>
             </div>
@@ -796,6 +854,8 @@ function SlimeRancherPage({ game }: { game: GamePort }) {
               </div>
             ))}
           </div>
+
+          <TechSolutionsBlock items={game.techSolutions} theme="slime" />
         </div>
       </section>
 
@@ -820,11 +880,14 @@ function SlimeRancherPage({ game }: { game: GamePort }) {
         <div className="container">
           <div className="sr-release-card">
             <div>
-              <span className="sr-kicker">UNITY → CAFE OS RPX</span>
-              <h2>Состояние сборки</h2>
+              <span className="sr-kicker">BUILD v42 NOLOG · ТОЛЬКО WUP INSTALLER</span>
+              <h2>Скачать Slime Rancher</h2>
               <p className="sr-release-lead">{game.summary}</p>
               <DownloadButtons mirrors={game.mirrors} variant="slime" />
-              <CopyPathPill value={game.installPath} />
+              <CopyPathPill value={game.installPath} label="Путь для WUP Installer GX2 / NUSspli" />
+              {game.notice && (
+                <p className="game-notice-box game-notice-light">{game.notice}</p>
+              )}
             </div>
 
             <div className="sr-specs-box">
@@ -985,6 +1048,8 @@ function SubnauticaPage({ game }: { game: GamePort }) {
               </div>
             ))}
           </div>
+
+          <TechSolutionsBlock items={game.techSolutions} theme="subnautica" />
         </div>
       </section>
 

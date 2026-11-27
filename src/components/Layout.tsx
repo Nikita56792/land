@@ -15,11 +15,11 @@ export function BrandMark({ light = false }: { light?: boolean }) {
     <a
       className={`brand-mark ${light ? 'is-light' : ''}`}
       href="#home"
-      aria-label="REAL LAB — на главную"
+      aria-label="Parhelio — на главную"
     >
       <img src="./mark.svg" alt="" width={34} height={34} />
       <span>
-        REAL <em>//</em> LAB
+        PARHELIO
       </span>
     </a>
   );
@@ -345,8 +345,15 @@ export function SiteFooter({
           <div className="footer-signoff">
             <img src="./mark.svg" alt="" width={24} height={24} />
             <span className="footer-signoff-brand">
-              REAL <em>//</em> LAB
+              PARHELIO
             </span>
+            <span className="footer-signoff-sep" aria-hidden="true">·</span>
+            <a
+              className="footer-signoff-handle"
+              href="https://parhelio.ru"
+            >
+              parhelio.ru
+            </a>
             <span className="footer-signoff-sep" aria-hidden="true">·</span>
             <a
               className="footer-signoff-handle"

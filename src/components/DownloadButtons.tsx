@@ -1,6 +1,21 @@
-import { useEffect, useState } from 'react';
-import { Check, Copy, Download, ExternalLink, Github, HardDrive, Clock } from 'lucide-react';
+import { useState } from 'react';
+import {
+  Check,
+  Clock,
+  Copy,
+  Download,
+  ExternalLink,
+  Github,
+  Globe,
+  HardDrive,
+  Package,
+} from 'lucide-react';
 import { MirrorLinks } from '../data/catalog';
+import {
+  MIRROR_LABELS,
+  MirrorPreference,
+  useSmartMirror,
+} from '../lib/mirrors';
 
 interface DownloadButtonsProps {
   mirrors: MirrorLinks;
@@ -8,27 +23,53 @@ interface DownloadButtonsProps {
   compact?: boolean;
 }
 
+export function MirrorSelectorBar({ dark = false }: { dark?: boolean }) {
+  const { preference, setPreference, activeMirror, probe } = useSmartMirror();
+
+  const latencyText =
+    activeMirror === 'ru' && probe.ruMs !== null
+      ? `${probe.ruMs} мс`
+      : activeMirror === 'global' && probe.globalMs !== null
+        ? `${probe.globalMs} мс`
+        : null;
+
+  const opts: { id: MirrorPreference; label: string }[] = [
+    { id: 'auto', label: 'Авто' },
+    { id: 'ru', label: 'РФ' },
+    { id: 'global', label: 'Мир' },
+  ];
+
+  return (
+    <div className={`mirror-bar ${dark ? 'mirror-bar-dark' : ''}`}>
+      <span className="mirror-bar-status">
+        <Globe size={14} />
+        <span>
+          Зеркало: <strong>{MIRROR_LABELS[activeMirror]}</strong>
+          {latencyText ? ` · ${latencyText}` : ''}
+        </span>
+      </span>
+      <div className="mirror-bar-pills" role="group" aria-label="Выбор зеркала скачивания">
+        {opts.map((opt) => (
+          <button
+            key={opt.id}
+            type="button"
+            className={preference === opt.id ? 'is-active' : ''}
+            onClick={() => setPreference(opt.id)}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function DownloadButtons({
   mirrors,
   variant = 'default',
   compact = false,
 }: DownloadButtonsProps) {
-  const [serverReady, setServerReady] = useState(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setServerReady(false);
-    fetch(mirrors.serverPath, { method: 'HEAD', signal: controller.signal })
-      .then((res) => {
-        if (!controller.signal.aborted) {
-          setServerReady(
-            res.ok && !res.headers.get('content-type')?.includes('text/html')
-          );
-        }
-      })
-      .catch(() => {});
-    return () => controller.abort();
-  }, [mirrors.serverPath]);
+  const { getReleaseUrl } = useSmartMirror();
 
   const primaryClass =
     variant === 'minecraft'
@@ -52,60 +93,85 @@ export function DownloadButtons({
             ? 'sn-btn sn-btn-ghost'
             : 'btn-tactile btn-tactile-light';
 
-  const hasAnyDownload = serverReady || Boolean(mirrors.githubReleaseUrl);
+  const isDarkTheme = variant === 'buckshot' || variant === 'subnautica';
+  const packages = mirrors.packages ?? [];
+  const hasPackages = packages.length > 0;
+  const hasAnyDownload =
+    hasPackages || Boolean(mirrors.cloudFileName) || Boolean(mirrors.githubReleaseUrl);
 
   return (
-    <div className={`dl-group ${compact ? 'dl-group-compact' : ''}`}>
-      {serverReady && (
-        <a
-          className={primaryClass}
-          href={mirrors.serverPath}
-          download={mirrors.serverFileName}
-        >
-          <HardDrive size={17} />
-          <span>Скачать с сервера</span>
-          {!compact && <span className="btn-chip">{mirrors.sizeLabel}</span>}
-        </a>
-      )}
+    <div className="dl-stack">
+      <div className={`dl-group ${compact ? 'dl-group-compact' : ''}`}>
+        {hasPackages
+          ? packages.map((pkg, idx) => (
+              <a
+                key={pkg.id}
+                className={pkg.primary ?? idx === 0 ? primaryClass : secondaryClass}
+                href={getReleaseUrl(pkg.fileName)}
+                download={pkg.fileName}
+              >
+                {idx === 0 ? <Download size={17} /> : <Package size={17} />}
+                <span>{pkg.formatLabel}</span>
+                {!compact && <span className="btn-chip">{pkg.sizeLabel}</span>}
+              </a>
+            ))
+          : mirrors.cloudFileName && (
+              <a
+                className={primaryClass}
+                href={getReleaseUrl(mirrors.cloudFileName)}
+                download={mirrors.cloudFileName}
+              >
+                <HardDrive size={17} />
+                <span>Скачать с Parhelio</span>
+                {!compact && <span className="btn-chip">{mirrors.sizeLabel}</span>}
+              </a>
+            )}
 
-      {mirrors.githubReleaseUrl && (
-        <a
-          className={serverReady ? secondaryClass : primaryClass}
-          href={mirrors.githubReleaseUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Download size={17} />
-          <span>{compact ? 'Скачать' : 'Скачать с GitHub'}</span>
-          <span className="btn-chip">{mirrors.sizeLabel}</span>
-        </a>
-      )}
+        {mirrors.githubReleaseUrl && (
+          <a
+            className={hasPackages || mirrors.cloudFileName ? secondaryClass : primaryClass}
+            href={mirrors.githubReleaseUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Download size={17} />
+            <span>{compact ? 'GitHub' : 'Зеркало GitHub'}</span>
+            {!hasPackages && !mirrors.cloudFileName && (
+              <span className="btn-chip">{mirrors.sizeLabel}</span>
+            )}
+          </a>
+        )}
 
-      {mirrors.githubRepoUrl && (
-        <a
-          className={secondaryClass}
-          href={mirrors.githubRepoUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Github size={17} />
-          <span>
-            {mirrors.githubRepoUrl.includes('/releases/')
-              ? 'Страница релиза'
-              : 'GitHub'}
-          </span>
-          {!compact && <ExternalLink size={14} className="opacity-65" />}
-        </a>
-      )}
+        {mirrors.githubRepoUrl && (
+          <a
+            className={secondaryClass}
+            href={mirrors.githubRepoUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Github size={17} />
+            <span>
+              {mirrors.githubRepoUrl.includes('/releases/')
+                ? 'Релиз GitHub'
+                : 'GitHub'}
+            </span>
+            {!compact && <ExternalLink size={14} className="opacity-65" />}
+          </a>
+        )}
 
-      {!hasAnyDownload && (
-        <div className={`dl-pending dl-pending-${variant}`}>
-          <Clock size={16} />
-          <span>
-            Сборка готовится к загрузке ({mirrors.sizeLabel}). Ссылки на сервер и
-            GitHub Releases появятся сразу после публикации.
-          </span>
-        </div>
+        {!hasAnyDownload && (
+          <div className={`dl-pending dl-pending-${variant}`}>
+            <Clock size={16} />
+            <span>
+              Сборка в активной разработке ({mirrors.sizeLabel}). Ссылки на
+              облачные зеркала Parhelio появятся сразу после публикации.
+            </span>
+          </div>
+        )}
+      </div>
+
+      {hasAnyDownload && !compact && (
+        <MirrorSelectorBar dark={isDarkTheme} />
       )}
     </div>
   );

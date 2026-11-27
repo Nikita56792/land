@@ -1,13 +1,32 @@
 export type SectionTab = 'games' | 'apps';
 
+export interface ReleasePackage {
+  id: string;
+  formatLabel: string;
+  shortTag: string;
+  fileName: string;
+  sizeLabel: string;
+  installPath?: string;
+  installLabel?: string;
+  primary?: boolean;
+}
+
 export interface MirrorLinks {
   serverPath: string;
   serverFileName: string;
+  cloudFileName?: string;
   sizeLabel: string;
+  packages?: ReleasePackage[];
   githubReleaseUrl: string | null;
   githubReleaseTag?: string;
   githubRepoUrl: string | null;
   itchUrl?: string | null;
+}
+
+export interface TechSolution {
+  tag: string;
+  title: string;
+  detail: string;
 }
 
 export interface GamePort {
@@ -23,10 +42,13 @@ export interface GamePort {
   gamepadRole: string;
   fpsTarget: string;
   installPath: string;
+  secondaryInstallPath?: string;
+  secondaryInstallLabel?: string;
   videoUrl: string;
   accentHex: string;
   summary: string;
   highlights: string[];
+  techSolutions: TechSolution[];
   telemetry: { label: string; value: string }[];
   notice?: string;
   mirrors: MirrorLinks;
@@ -70,38 +92,39 @@ export interface MacApp {
 }
 
 export const STUDIO_INFO = {
-  brand: 'REAL // LAB',
+  brand: 'Parhelio',
+  domain: 'parhelio.ru',
   handle: 'Nikita56792',
   githubProfileUrl: 'https://github.com/Nikita56792',
   landingRepoUrl: 'https://github.com/Nikita56792/land',
-  contactEmail: 'hello@reallab.dev',
-  locationNote: 'Независимые инженерные релизы · Открытый исходный код',
+  contactEmail: 'hello@parhelio.ru',
+  locationNote: 'Parhelio · Независимые порты для Wii U и софт для Mac',
 };
 
 export const DONATE_METHODS = {
   ru: [
     {
-      name: 'Альфа-Банк (СБП / Перевод)',
-      detail: 'Реквизиты и прямая ссылка на перевод — по запросу на почту',
-      actionLabel: 'Связаться',
-      href: 'mailto:hello@reallab.dev?subject=Support%20(Alfa)',
+      name: 'ЮMoney (YooMoney)',
+      detail: 'Добровольная поддержка из России — на кофе, серверы и нейросети',
+      actionLabel: 'Написать',
+      href: 'mailto:hello@parhelio.ru?subject=Support%20Parhelio%20(YooMoney)',
       valueToCopy: '',
     },
     {
-      name: 'ЮMoney (YooMoney)',
-      detail: 'Перевод на кофе и оплату нейросетей',
-      actionLabel: 'Написать',
-      href: 'mailto:hello@reallab.dev?subject=Support%20(YooMoney)',
+      name: 'СБП / Перевод по РФ',
+      detail: 'Прямая ссылка на перевод — по запросу на почту',
+      actionLabel: 'Связаться',
+      href: 'mailto:hello@parhelio.ru?subject=Support%20Parhelio%20(SBP)',
       valueToCopy: '',
     },
   ],
   intl: [
     {
       name: 'GitHub / Direct Contact',
-      detail: 'Прямой контакт через профиль GitHub или почту',
+      detail: 'Международная поддержка и связь через GitHub или почту',
       actionLabel: 'GitHub @Nikita56792',
       href: 'https://github.com/Nikita56792',
-      valueToCopy: 'hello@reallab.dev',
+      valueToCopy: 'hello@parhelio.ru',
     },
   ],
 };
@@ -111,35 +134,83 @@ export const WIIU_PORTS: GamePort[] = [
     id: 'minecraft-dualscreen',
     slug: 'minecraft',
     title: 'Minecraft: Wii U Edition',
-    subtitle: 'DualScreen Co-op Edition (TV + GamePad)',
-    badge: 'Готовый .wuhb релиз',
+    subtitle: 'DualScreen Co-op · RedHills C++ · 1080p AMD CAS',
+    badge: 'Релиз v688 · .wuhb + WUP',
     statusTone: 'ready',
-    engineStack: 'C++ Decompilation · RedHills · Cafe OS GX2',
-    dualScreenMode: 'Игрок 1 (TV 1080p) + Игрок 2 (GamePad DRC)',
-    tvRole: 'Полноэкранный вид Игрока 1 без деления экрана (Full 16:9)',
-    gamepadRole: 'Независимый вид Игрока 2 + сенсорный крафт/инвентарь + отдельный звук',
-    fpsTarget: '60 FPS · Aroma .wuhb',
-    installPath: 'sd:/wiiu/apps/Minecraft.WiiU-DualScreenUI.wuhb',
+    engineStack: 'C++ Decomp (RedHills Clang 19) · WUT · GX2 + AMD CAS',
+    dualScreenMode: 'Игрок 1 (TV 1080p CAS) + Игрок 2 (GamePad DRC 854×480)',
+    tvRole: 'Полноэкранный вид Игрока 1 (720p→1080p AMD FidelityFX CAS)',
+    gamepadRole: 'Независимый вид Игрока 2 + масштабированный тач-UI + отдельный звук AX',
+    fpsTarget: '60 FPS (vsync) · 20 TPS · .wuhb + WUP',
+    installPath: 'sd:/wiiu/apps/Minecraft.WiiU.wuhb',
+    secondaryInstallPath: 'sd:/install/Minecraft_WiiU/',
+    secondaryInstallLabel: 'Путь для WUP Installer GX2',
     videoUrl: './media/games/minecraft-dualscreen.mp4',
     accentHex: '#34D399',
     summary:
-      'Локальный кооператив для двух игроков на одной Wii U без split-screen: первый игрок играет на полном экране телевизора, второй — на собственном экране Wii U GamePad с сенсорным интерфейсом DualScreenUI и раздельным выводом аудио.',
+      'Полная C++-реконструкция Minecraft: Wii U Edition (Update v688, 3 753 .cpp без исходного бинарника) с настоящим двухэкранным кооперативом без split-screen, апскейлом 720p→1080p AMD FidelityFX CAS, сенсорным DualScreenUI и аппаратно разделённым звуком.',
     highlights: [
-      'Два независимых полных экрана вместо тесного деления картинки пополам',
-      'Раздельное аудио: звук мира P1 на ТВ, звук P2 — в динамиках или наушниках GamePad',
-      'Сборка скомпилирована под Cafe OS / Aroma в одном самодостаточном файле .wuhb',
-      'Прямое скачивание готового .wuhb с GitHub Releases и локальной копии сервера',
+      'Два независимых полных экрана (SeparateGamePad): TV 16:9 для P1 и GamePad 854×480 для P2 с собственными камерами и HUD',
+      'Кастомный fused-шейдер AMD FidelityFX CAS (sharpness 0.38) + Gamma для вывода 1080p на TV и прямой сэмплинг 720p на DRC',
+      'Аппаратно разделённый звук Miles/BinkA на Core 2 (AXInit, 128 голосов): два 3D-слушателя и два музыкальных потока (HDMI vs GamePad 3.5 мм)',
+      'Два готовых формата: автономный .wuhb для Aroma и полный WUP Installer (Title ID 00050000101D7500 v688) для установки в NAND/USB',
+    ],
+    techSolutions: [
+      {
+        tag: 'REDHILLS C++ DECOMP',
+        title: '9.38 МБ чистый RPX без оригинального кода',
+        detail:
+          '3 753 .cpp и 4 016 .hpp скомпилированы RedHills (Clang 19 с Green Hills C++ ABI) + LLVM 22 + WUT. 3-ядерный аффинити Espresso (CPU 0/1/2) и кастомная арена dlmalloc в MEM2.',
+      },
+      {
+        tag: 'GX2 + AMD CAS 1080P',
+        title: 'Dual Framebuffer в 22 МБ MEM1 + FidelityFX CAS',
+        detail:
+          'Алиасинг последовательных рендер-пасов в 22 МБ MEM1 при раздельном DRC-буфере (D24_S8 + HiZ). Fused pixel-шейдер GammaCASShader апскейлит 720p→1080p на TV без лишнего прохода.',
+      },
+      {
+        tag: 'DUALSCREEN UI & TOUCH',
+        title: 'Масштабирование меню P2 и тач-ремаппинг',
+        detail:
+          'GetGamePadSceneTransform увеличивает сундуки/зельеварение в 1.14× и инвентарь/верстак/печь в 1.35× на экране GamePad с точным пересчётом координат касаний VPAD.',
+      },
+      {
+        tag: 'AX DSP · CORE 2',
+        title: 'Два 3D-слушателя и раздельный вывод аудио',
+        detail:
+          'Реконструированный Miles + BinkA прибит к Core 2 (32 кГц, 128 голосов): флаги outputToDRC/separateOutputs и два потока музыки разводят звук P1 на ТВ и P2 в GamePad.',
+      },
     ],
     telemetry: [
-      { label: 'Формат', value: '.wuhb (Aroma)' },
-      { label: 'Размер', value: '1.41 ГБ' },
-      { label: 'Режим 2P', value: 'TV + GamePad (без split-screen)' },
-      { label: 'Рендер', value: 'GX2 Dual Framebuffer' },
+      { label: 'Версия / Title ID', value: 'Update v688 · 00050000101D7500' },
+      { label: 'Форматы', value: 'Aroma .wuhb (1.41 ГБ) · WUP .zip (1.44 ГБ)' },
+      { label: 'Режим 2P', value: 'TV 1080p CAS + GamePad 480p' },
+      { label: 'Сохранения', value: 'nn::save · квота 51 МБ · до 99 миров' },
     ],
     mirrors: {
-      serverPath: './downloads/Minecraft.WiiU-DualScreenUI.wuhb',
-      serverFileName: 'Minecraft.WiiU-DualScreenUI.wuhb',
+      serverPath: './downloads/Minecraft.WiiU.wuhb',
+      serverFileName: 'Minecraft.WiiU.wuhb',
+      cloudFileName: 'Minecraft.WiiU.wuhb',
       sizeLabel: '1.41 ГБ',
+      packages: [
+        {
+          id: 'mc-wuhb',
+          formatLabel: 'Скачать .wuhb (Aroma)',
+          shortTag: 'Aroma .wuhb',
+          fileName: 'Minecraft.WiiU.wuhb',
+          sizeLabel: '1.41 ГБ',
+          installPath: 'sd:/wiiu/apps/Minecraft.WiiU.wuhb',
+          primary: true,
+        },
+        {
+          id: 'mc-wup',
+          formatLabel: 'Скачать WUP Installer (.zip)',
+          shortTag: 'WUP GX2',
+          fileName: 'Minecraft_WiiU-WUP.zip',
+          sizeLabel: '1.44 ГБ',
+          installPath: 'sd:/install/Minecraft_WiiU/',
+        },
+      ],
       githubReleaseUrl:
         'https://github.com/Nikita56792/land/releases/download/mcwiiu-dualscreen-v1.0/Minecraft.WiiU-DualScreenUI.wuhb',
       githubReleaseTag: 'mcwiiu-dualscreen-v1.0',
@@ -150,34 +221,84 @@ export const WIIU_PORTS: GamePort[] = [
     id: 'buckshot-roulette',
     slug: 'buckshot',
     title: 'Buckshot Roulette',
-    subtitle: 'Wii U Native Port + Dual-Screen Local 1v1',
-    badge: 'Высокое качество · 1v1 на 2 экранах',
+    subtitle: 'Build 116 (v44) · Нативный C++20/GX2 + локальный 1v1',
+    badge: 'Релиз Build 116 · .wuhb + WUP',
     statusTone: 'ready',
-    engineStack: 'Godot GDScript → PowerPC + Wii U GX2',
-    dualScreenMode: 'Локальный 1v1: Игрок 1 (TV) ↔ Игрок 2 (GamePad)',
-    tvRole: 'Камера Игрока 1 за столом · осмотр дробовика и патронов',
-    gamepadRole: 'Закрытый экран Игрока 2 · предметы на тачскрине без подглядывания',
-    fpsTarget: 'Стабильно 60 FPS на Wii U',
+    engineStack: 'GDScript → C++20 Coroutines · WUT GX2 · AX DSP',
+    dualScreenMode: 'Локальный 1v1: Игрок 1 (TV 1080p CAS) ↔ Игрок 2 (GamePad DRC)',
+    tvRole: 'Камера Игрока 1 (720p→1080p AMD CAS) + отдельный звук TVOnly',
+    gamepadRole: 'Свой ракурс Игрока 2 (854×480) + тачскрин + личный звук DRCOnly',
+    fpsTarget: '30 FPS lock · 28 нативных GX2-шейдеров',
     installPath: 'sd:/wiiu/apps/BuckshotRoulette.wuhb',
+    secondaryInstallPath: 'sd:/install/BuckshotRoulette_WiiU/',
+    secondaryInstallLabel: 'Путь для WUP Installer GX2',
     videoUrl: './media/games/buckshot-roulette.mp4',
     accentHex: '#F87171',
     summary:
-      'Порт высокого качества с нативной производительностью и уникальным локальным мультиплеером на одной консоли: Игрок 1 играет на телевизоре, Игрок 2 — на Wii U GamePad с раздельными ракурсами и скрытой информацией.',
+      'Собственный нативный C++20 / PowerPC / WUT рантайм (без движка Godot на консоли): трансляция GDScript в C++20-корутины, 28 нативных GX2-шейдеров с AMD CAS 720p→1080p, аппаратный звук AX DSP с IMA-ADPCM и локальный 1v1 на двух экранах.',
     highlights: [
-      'Прямая трансляция логики GDScript в нативный код PowerPC с рендером через GX2',
-      'Асимметричный локальный PvP на одной консоли без второго телевизора',
-      'Адаптированное управление: стики/триггеры + сенсорный выбор предметов на GamePad',
+      'Собственный транслятор GDScript → C++20 с корутинами (co_task.h) и бинарными сценами .blayout / OBPK (game.rpx 4.17 МБ)',
+      'Асимметричная дуэль 1v1 на одной консоли: раздельные камеры, FP/TP-видимость предметов, личные паузы и разведённый звук TVOnly/DRCOnly',
+      'Нативное аудио AX DSP + 4-bit IMA-ADPCM сжало сборку с ~1.28 ГБ до 303–313 МБ со стримингом длинных треков на Core 2',
+      'GamePad (антидребезг тачскрина 2.5 px), Pro Controller, Classic Controller, Wii Remote + IR-указатель (3.0 px), nn::swkbd и все 17 языков',
+    ],
+    techSolutions: [
+      {
+        tag: 'GD → C++20 RUNTIME',
+        title: 'Без Godot на консоли: корутины и OBPK-пакеты',
+        detail:
+          'Скрипты SP и MP транслированы в C++20 (co_task.h для await, timer_queue, сигналы). Сцены, анимации и скелеты собраны в .blayout и пакеты OBPK; единый game.rpx весит 4.17 МБ.',
+      },
+      {
+        tag: '28 GX2 SHADERS + CAS',
+        title: 'CafeGLSL 1.0.0-rc1 · 720p→1080p AMD CAS',
+        detail:
+          '26 специализированных GFD-шейдеров освещения, постобработки vignette/posterize, процедурного неба финала и VHS-эффектов лобби. Tiled BC-текстуры грузятся строго вне render pass на Core 2.',
+      },
+      {
+        tag: 'AX DSP + IMA-ADPCM',
+        title: 'Сжатие аудио в 4× и раздельная маршрутизация',
+        detail:
+          'Нативный AXAudioEngine без SDL-микшера: 4-bit IMA-ADPCM (O(1) seek) уменьшил образ с 1.28 ГБ до ~303 МБ; маршрутизация TVOnly / DRCOnly / Both и стриминг >512 КБ на Core 2.',
+      },
+      {
+        tag: 'PROCUI & INPUT',
+        title: 'Все контроллеры Wii U, nn::swkbd и чистый выход',
+        detail:
+          'GamePad, Pro Controller, Classic и Wii Remote IR с антидребезгом и гистерезисом наведения; системная клавиатура nn::swkbd для имён в лобби, 17 языков и проверенный выход ProcUI в Wii U Menu.',
+      },
     ],
     telemetry: [
-      { label: 'Статус', value: 'Готовый порт' },
-      { label: 'Пайплайн', value: 'GD → Wii U GX2 / PPC' },
-      { label: 'Мультиплеер', value: 'TV (P1) + GamePad (P2)' },
-      { label: 'Публикация', value: 'Релиз готовится к заливке' },
+      { label: 'Сборка / Title ID', value: 'Build 116 v44 · 000500001337B001' },
+      { label: 'Форматы', value: 'Aroma .wuhb (303 МБ) · WUP .zip (313 МБ)' },
+      { label: 'Графика', value: '720p→1080p AMD CAS · 30 FPS · 28 .gsh' },
+      { label: 'Языки / Режим', value: '17 языков · SP + локальный 2P (без онлайна)' },
     ],
+    notice: 'Сетевой мультиплеер (Join Game) отключён — доступны полная одиночная кампания против Дилера и локальный 1v1 (TV + GamePad). Сохранения .wuhb пишутся в SD:/save/openbr/.',
     mirrors: {
-      serverPath: './downloads/BuckshotRoulette-WiiU.wuhb',
-      serverFileName: 'BuckshotRoulette-WiiU.wuhb',
-      sizeLabel: '.wuhb (скоро)',
+      serverPath: './downloads/BuckshotRoulette.wuhb',
+      serverFileName: 'BuckshotRoulette.wuhb',
+      cloudFileName: 'BuckshotRoulette.wuhb',
+      sizeLabel: '303 МБ',
+      packages: [
+        {
+          id: 'br-wuhb',
+          formatLabel: 'Скачать .wuhb (Aroma)',
+          shortTag: 'Aroma .wuhb',
+          fileName: 'BuckshotRoulette.wuhb',
+          sizeLabel: '303 МБ',
+          installPath: 'sd:/wiiu/apps/BuckshotRoulette.wuhb',
+          primary: true,
+        },
+        {
+          id: 'br-wup',
+          formatLabel: 'Скачать WUP Installer (.zip)',
+          shortTag: 'WUP GX2',
+          fileName: 'BuckshotRoulette_WiiU-WUP.zip',
+          sizeLabel: '313 МБ',
+          installPath: 'sd:/install/BuckshotRoulette_WiiU/',
+        },
+      ],
       githubReleaseUrl: null,
       githubRepoUrl: null,
     },
@@ -186,34 +307,75 @@ export const WIIU_PORTS: GamePort[] = [
     id: 'slime-rancher',
     slug: 'slime',
     title: 'Slime Rancher',
-    subtitle: 'Wii U Cafe OS Port (Unity → RPX)',
-    badge: 'Играбельный порт',
+    subtitle: 'v42 NoLog · Full-AOT Unity 5.6.5p4 · WUP Installer',
+    badge: 'Релиз v42 · WUP (902 МБ)',
     statusTone: 'playable',
-    engineStack: 'Unity → Cafe OS RPX / GX2 Translator',
-    dualScreenMode: 'TV Основной мир + GamePad карта / Слаймапедия',
-    tvRole: 'Игровой мир Far, Far Range + HUD вакпака',
-    gamepadRole: 'Сенсорная карта ранчо, слаймапедия и режим Off-TV Play',
-    fpsTarget: 'Играбельно (возможны отдельные баги)',
-    installPath: 'sd:/wiiu/apps/SlimeRancher.wuhb',
+    engineStack: 'Unity 5.6.5p4 RPX · 100% Full-AOT · Core 2 SIMD RPL',
+    dualScreenMode: 'TV Далёкое Запределье (DRS + CAS) + GamePad живая карта',
+    tvRole: 'Мир ранчо 720p→576p DRS + Luma-only AMD CAS @ 30 FPS',
+    gamepadRole: 'Независимая интерактивная карта MapUI (тач 1:1 без паузы игры)',
+    fpsTarget: '30 FPS lock · ~28–30 FPS на ранчо · только WUP',
+    installPath: 'sd:/install/SlimeRancher_WiiU_NoLog/',
     videoUrl: './media/games/slime-rancher.mp4',
     accentHex: '#FB7185',
     summary:
-      'Играбельный порт Slime Rancher под архитектуру Wii U на базе транслятора Unity → RPX. Собраны основные локации ранчо, физика слаймов и вакпак; местами встречаются графические и физические шероховатости.',
+      'Порт PC Slime Rancher v1.2.2 на консольный Unity 5.6.5p4 (Unity-master.rpx) со 100% Full-AOT компиляцией (50 719 методов), собственным SIMD-плагином slime_wiiu.rpl на Core 2, 3 786 нативными GX2-шейдерами, WPVS-окклюзией и живой сенсорной картой на GamePad.',
     highlights: [
-      'Трансляция Unity-сцены и ассетов в нативный исполняемый формат Cafe OS (.rpx)',
-      'Вынесенный инвентарь и карта на экран Wii U GamePad + поддержка Off-TV',
-      'Пост-релизная форма обратной связи для правообладателей и патчей',
+      '100% Full-AOT компиляция (50 719 / 50 719 методов) в 12 .rpl + нативный C/PPC плагин slime_wiiu.rpl с Paired Singles SIMD куллингом на Core 2',
+      'Офлайн-батчинг мира (24 434 → 2 686 батчей, -70 436 лишних объектов), Float16 VBO + Tom Forsyth и Dual-Volume WPVS (12 742 ячеек, отсечение >32% батчей)',
+      '2 821 PS + 965 VS скомпилированы под GX2, вырезаны GrabPass-сливы MEM1, восстановлен Early-Z/Hi-Z + Single-RT Luma-only AMD CAS (720p→648p→576p)',
+      '100% аудио (583/583) в аппаратном GCADPCM (AX DSP 120 МГц, ~0% CPU) + патч вывода звука одновременно на TV и GamePad',
+    ],
+    techSolutions: [
+      {
+        tag: 'FULL-AOT + SIMD RPL',
+        title: '50 719 методов AOT + Core 2 Paired Singles',
+        detail:
+          'IL-перезапись API Unity 2017.1→5.6.5p4 и компиляция всех 50 719 методов в .rpl. Плагин slime_wiiu_nolog.rpl (-DWIIU_NO_LOG) выполняет пространственный куллинг 512 акторов инструкциями psq_l/ps_madd/frsqrte.',
+      },
+      {
+        tag: 'GX2 + WPVS + CAS',
+        title: '3 786 шейдеров, -21 748 draw calls и PVS v2',
+        detail:
+          'Убраны все GrabPass и while(true) fBM-циклы, восстановлен Early-Z (KILL_ENABLE=0), собран WPVS на 12 742 ячеек, Float16 VBO и Single-RT Luma-only AMD CAS (пол 576p; меню в нативных 720p).',
+      },
+      {
+        tag: 'AX DSP GCADPCM',
+        title: '583/583 звуков аппаратно + патч на GamePad',
+        detail:
+          'Все клипы перекодированы в GCADPCM (FMOD_HARDWARE, 0% CPU); патч 1 инструкции в Unity-master.rpx включает одновременный вывод аппаратных голосов на TV и GamePad.',
+      },
+      {
+        tag: 'GAMEPAD MAPUI & RAM',
+        title: 'Сенсорная карта без паузы + укладка в 849 МБ',
+        detail:
+          'Карта на GamePad (рендер по требованию 3–15 Гц, ~0.05 мс GPU, тач изолирован от вакпака). Zero-GC, FastSyncLoad v42, Proxy-Vista farClip и безопасные сохранения /$SAVE.',
+      },
     ],
     telemetry: [
-      { label: 'Статус', value: 'Рабочий · возможны баги' },
-      { label: 'Трансляция', value: 'Unity → Cafe OS RPX' },
-      { label: 'Стек GPU', value: 'GX2 Shaders' },
-      { label: 'Публикация', value: 'Релиз готовится к заливке' },
+      { label: 'Версия / Title ID', value: 'v42 NoLog · 0005000021000002' },
+      { label: 'Формат', value: 'Только WUP Installer .zip (902 МБ)' },
+      { label: 'Графика', value: 'DRS 720p→576p + Luma CAS · 30 FPS' },
+      { label: 'Верификация', value: '23 .app · AES/TMD/H0–H3/FST PASS' },
     ],
+    notice:
+      'Доступно только в формате WUP Installer (без .wuhb — Unity RPX + 13 .rpl устанавливаются как полноценный тайтл). Распакуйте в sd:/install/SlimeRancher_WiiU_NoLog/ и установите через WUP Installer GX2 или NUSspli (нужен CFW с sigpatches). Тени, SSAO, Bloom и MSAA отключены ради 30 FPS.',
     mirrors: {
-      serverPath: './downloads/SlimeRancher-WiiU.wuhb',
-      serverFileName: 'SlimeRancher-WiiU.wuhb',
-      sizeLabel: '.wuhb (скоро)',
+      serverPath: './downloads/SlimeRancher_WiiU_NoLog-WUP.zip',
+      serverFileName: 'SlimeRancher_WiiU_NoLog-WUP.zip',
+      cloudFileName: 'SlimeRancher_WiiU_NoLog-WUP.zip',
+      sizeLabel: '902 МБ',
+      packages: [
+        {
+          id: 'sr-wup',
+          formatLabel: 'Скачать WUP Installer (.zip)',
+          shortTag: 'WUP GX2 (NoLog)',
+          fileName: 'SlimeRancher_WiiU_NoLog-WUP.zip',
+          sizeLabel: '902 МБ',
+          installPath: 'sd:/install/SlimeRancher_WiiU_NoLog/',
+          primary: true,
+        },
+      ],
       githubReleaseUrl: null,
       githubRepoUrl: null,
     },
@@ -222,35 +384,56 @@ export const WIIU_PORTS: GamePort[] = [
     id: 'subnautica',
     slug: 'subnautica',
     title: 'Subnautica',
-    subtitle: 'R&D Adapter Port (Cemu / Wii U Hardware)',
-    badge: 'В разработке · R&D',
+    subtitle: 'R&D v18 · Full-AOT Unity 5.6 + Single-RT WBOIT + CAS',
+    badge: 'В разработке · R&D v18',
     statusTone: 'wip',
-    engineStack: 'Unity → PowerPC / GX2 Adapter',
-    dualScreenMode: 'TV Подводный мир + GamePad КПК (PDA) / Сонар',
-    tvRole: 'Океан, капсула, глубиномер и биомы планеты 4546B',
-    gamepadRole: 'Терминал PDA: чертежи, сканер и сонар в реальном времени',
+    engineStack: 'Unity 5.6.5p4 RPX · Full-AOT (45 582) · WBOIT + CAS',
+    dualScreenMode: 'TV Подводный мир (432p→720p CAS) + GamePad Alterra PDA',
+    tvRole: 'Океан 4546B с Single-RT WBOIT и нативным 720p HUD',
+    gamepadRole: 'Планируемый вынос КПК Alterra (PDA), чертежей и сонара',
     fpsTarget: 'Cemu 24–30 FPS · Wii U консоль ~10 FPS',
-    installPath: 'sd:/wiiu/apps/Subnautica-Adapter/',
+    installPath: 'sd:/install/Subnautica_WiiU/ (R&D)',
     videoUrl: './media/games/subnautica.mp4',
     accentHex: '#38BDF8',
     summary:
-      'Экспериментальный порт-адаптер Subnautica: на эмуляторе Cemu проект стабильно держит 24–30 FPS; на реальной консоли Wii U работают меню и звук, но в открытом мире около ~10 FPS и часть шейдеров воды ещё переносится.',
+      'Экспериментальный порт-адаптер Subnautica (сборка v18, Title ID 0005000021000003): 100% Full-AOT (45 582 метода), 5 600 GX2-шейдеров, Single-RT WBOIT и апскейл 432p→720p AMD CAS. В Cemu держит 24–30 FPS; на реальной Wii U работают меню, звук и океан (~10 FPS, идёт оптимизация потоковой подгрузки).',
     highlights: [
-      'Cemu: 24–30 FPS с рабочим перемещением, базовым освещением и интерфейсом',
-      'Реальная Wii U: загружаются меню и звук, в 3D-мире ~10 FPS (оптимизация памяти MEM2)',
-      'Рассматривается выпуск в формате чистого адаптера под легальную копию ПК-игры',
+      '100% Full-AOT компиляция (45 582 / 45 582 методов Assembly-CSharp) и 5 600 провалидированных GX2-шейдеров',
+      'Single-RT WBOIT + 768×432→1280×720 AMD FidelityFX CAS (sharp=0.80) с нативным 720p UI и бюджетом RT 23–29 МБ внутри 32 МБ MEM1',
+      'Стабильное потребление памяти 554–563 МБ + нативный fmodstudio.rpl (486 экспортов) на Core 2 и AX DSP',
+      'Рассматривается выпуск в формате чистого адаптера поверх легальной ПК-копии (полный образ WUP весит 9.2 ГБ)',
+    ],
+    techSolutions: [
+      {
+        tag: 'FULL-AOT · 45 582',
+        title: 'Полная AOT-сборка Unity 5.6.2 → 5.6.5p4',
+        detail:
+          'Все 45 582 метода Assembly-CSharp скомпилированы под PowerPC; стабильный профиль памяти 554–563 МБ в рамках ограничений Wii U MEM2.',
+      },
+      {
+        tag: 'SINGLE-RT WBOIT + CAS',
+        title: '5 600 шейдеров GX2 в бюджете 32 МБ MEM1',
+        detail:
+          'Прозрачность воды и стекла через Single-RT WBOIT, 3D-рендер 768×432 с AMD FidelityFX CAS (0.80) до 1280×720 и нативный чёткий 720p интерфейс (RT ~23–29 МБ).',
+      },
+      {
+        tag: 'FMOD STUDIO RPL',
+        title: 'Нативный fmodstudio.rpl на Core 2',
+        detail:
+          '486 экспортов FMOD Studio вынесены на Core 2 + аппаратный AX DSP, управление адаптировано под GamePad и Wii U Pro Controller.',
+      },
     ],
     telemetry: [
-      { label: 'Cemu', value: '24–30 FPS' },
-      { label: 'Wii U железо', value: 'Меню/звук OK · мир ~10 FPS' },
-      { label: 'Формат', value: 'Адаптер / Unity → RPX' },
-      { label: 'Статус', value: 'Активная доработка' },
+      { label: 'Сборка / Title ID', value: 'v18 R&D · 0005000021000003' },
+      { label: 'Cemu / Wii U', value: 'Cemu 24–30 FPS · Wii U ~10 FPS' },
+      { label: 'Шейдеры / Память', value: '5 600 GX2 · Alloc 554–563 МБ' },
+      { label: 'Размер / Статус', value: '9.2 ГБ WUP · активная оптимизация' },
     ],
-    notice: 'Промежуточная сборка R&D: требуется оптимизация потоковой подгрузки чанков под 2 ГБ RAM Wii U.',
+    notice: 'Промежуточная R&D-сборка v18: публичная раздача ещё не открыта — идёт оптимизация стриминга чанков океана под железо Wii U и проработка формата чистого адаптера.',
     mirrors: {
       serverPath: './downloads/Subnautica-WiiU-Adapter.zip',
       serverFileName: 'Subnautica-WiiU-Adapter.zip',
-      sizeLabel: 'Adapter (в работе)',
+      sizeLabel: 'R&D v18 (в работе)',
       githubReleaseUrl: null,
       githubRepoUrl: null,
     },
@@ -259,19 +442,19 @@ export const WIIU_PORTS: GamePort[] = [
 
 export const PORTING_PIPELINE = [
   {
-    code: 'GD → PPC/GX2',
-    title: 'Транслятор Godot → Wii U',
-    detail: 'Статическая трансляция сцен и скриптов GDScript в C++ под PowerPC 750CL с прямым рендером на GX2.',
+    code: 'REDHILLS C++',
+    title: 'Реконструкция C++ под Cafe OS (Minecraft)',
+    detail: 'Сборка 3 753 .cpp файлов через RedHills (Clang 19 / Green Hills ABI) + WUT с кастомным GX2 Dual-Screen, AMD CAS 1080p и 2P-звуком Miles/AX.',
   },
   {
-    code: 'UNITY → RPX',
-    title: 'Транслятор Unity → Cafe OS',
-    detail: 'Подмена графического бэкенда и перенос управляемой логики в нативные модули .rpx / .wuhb для Aroma.',
+    code: 'GD → C++20 / GX2',
+    title: 'Транслятор Godot → PowerPC (Buckshot Roulette)',
+    detail: 'Перевод GDScript в нативный C++20 с корутинами, офлайн-шейдерами CafeGLSL, AMD CAS 720p→1080p и аппаратным звуком AX DSP + IMA-ADPCM.',
   },
   {
-    code: 'SD LAUNCHER',
-    title: 'Кроссплатформенный установщик (Win / Mac / Linux)',
-    detail: 'В планах: единая утилита, которая скачивает актуальные сборки и раскладывает файлы сразу на SD-карту в sd:/wiiu/apps/.',
+    code: 'UNITY → FULL-AOT',
+    title: 'Пайплайн Unity → RPX + SIMD (Slime / Subnautica)',
+    detail: '100% Full-AOT компиляция C# под PowerPC, конвертация тысяч DX11-шейдеров в GX2, PVS-окклюзия, Luma AMD CAS и нативные C-плагины Core 2.',
   },
 ];
 
@@ -305,6 +488,7 @@ export const MAC_APPS: MacApp[] = [
     mirrors: {
       serverPath: './downloads/Epidaurus-0.2.0.dmg',
       serverFileName: 'Epidaurus-0.2.0.dmg',
+      cloudFileName: 'Epidaurus-0.2.0.dmg',
       sizeLabel: '31 МБ (.dmg)',
       githubReleaseUrl: 'https://github.com/Nikita56792/epidaurus/releases/download/v0.2.0/Epidaurus-0.2.0.dmg',
       githubReleaseTag: 'v0.2.0',
@@ -346,7 +530,8 @@ export const MAC_APPS: MacApp[] = [
     mirrors: {
       serverPath: './downloads/Kraken-0.4.0.pkg',
       serverFileName: 'Kraken-0.4.0.pkg',
-      sizeLabel: '8.8 МБ (.pkg)',
+      cloudFileName: 'Kraken-0.4.0.pkg',
+      sizeLabel: '9.9 МБ (.pkg)',
       githubReleaseUrl: 'https://github.com/Nikita56792/kraken/releases/download/v0.4.0/Kraken-0.4.0.pkg',
       githubReleaseTag: 'v0.4.0',
       githubRepoUrl: 'https://github.com/Nikita56792/kraken',
@@ -384,6 +569,7 @@ export const MAC_APPS: MacApp[] = [
     mirrors: {
       serverPath: './downloads/Real3D-1.2.0.dmg',
       serverFileName: 'Real3D-1.2.0.dmg',
+      cloudFileName: 'Real3D-1.2.0.dmg',
       sizeLabel: '857 МБ (.dmg)',
       githubReleaseUrl: 'https://github.com/Nikita56792/real3d/releases/download/v1.2.0/Real3D-1.2.0.dmg',
       githubReleaseTag: 'v1.2.0',
@@ -421,6 +607,7 @@ export const MAC_APPS: MacApp[] = [
     mirrors: {
       serverPath: './downloads/Fovea-1.0.0.dmg',
       serverFileName: 'Fovea-1.0.0.dmg',
+      cloudFileName: 'Fovea-1.0.0.dmg',
       sizeLabel: '164 МБ (.dmg)',
       githubReleaseUrl: 'https://github.com/Nikita56792/fovea/releases/download/v1.0.0/Fovea-1.0.0.dmg',
       githubReleaseTag: 'v1.0.0',

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { MAC_APPS, MacApp, WIIU_PORTS } from '../data/catalog';
 import { appNotes, art, formatDate, stories, updates } from '../data/editorial';
+import { useSmartMirror } from '../lib/mirrors';
 import { FoveaVectorMark, KrakenVectorMark } from './AppVisuals';
 
 export function AppSquircle({
@@ -37,6 +38,7 @@ export function AppSquircle({
 
 export function HomePage() {
   const newsTrackRef = useRef<HTMLDivElement>(null);
+  const { getReleaseUrl } = useSmartMirror();
 
   const scrollNews = (dir: number) => {
     newsTrackRef.current?.scrollBy({ left: dir * 340, behavior: 'smooth' });
@@ -45,7 +47,7 @@ export function HomePage() {
   return (
     <div className="home-page">
       {/* RPCS3-inspired Luminous Cobalt-Indigo Hero */}
-      <section className="rpcs-hero" aria-label="Главный экран REAL LAB">
+      <section className="rpcs-hero" aria-label="Главный экран Parhelio">
         <div className="rpcs-hero-particles" aria-hidden="true" />
         <div className="container rpcs-hero-grid">
           <div className="rpcs-hero-copy">
@@ -227,11 +229,14 @@ export function HomePage() {
 
                   <div className="rpcs-app-bottom">
                     <div className="rpcs-app-btns">
-                      {app.mirrors.githubReleaseUrl && (
+                      {(app.mirrors.cloudFileName || app.mirrors.githubReleaseUrl) && (
                         <a
-                          href={app.mirrors.githubReleaseUrl}
-                          target="_blank"
-                          rel="noreferrer"
+                          href={
+                            app.mirrors.cloudFileName
+                              ? getReleaseUrl(app.mirrors.cloudFileName)
+                              : app.mirrors.githubReleaseUrl!
+                          }
+                          download={app.mirrors.cloudFileName || undefined}
                           className={`btn-rpcs-pill btn-rpcs-${app.id}`}
                         >
                           <span className="pill-arch">ARM</span>
@@ -380,27 +385,26 @@ export function HomePage() {
                 className="release-banner-block"
               />
               <div>
-                <span className="release-pill-green">Готово к установке · v1.0</span>
-                <h3>Minecraft: Wii U Edition — DualScreen Co-op (.wuhb)</h3>
+                <span className="release-pill-green">Зеркала Parhelio · 3 готовых порта</span>
+                <h3>Minecraft v688 · Buckshot Build 116 · Slime Rancher v42</h3>
                 <p>
-                  Один файл 1.41 ГБ для Wii U Aroma — кооператив вдвоём на ТВ и
-                  GamePad без разделения экрана.
+                  Автоматический выбор зеркала РФ / Мир — готовые сборки Aroma
+                  .wuhb и WUP Installer GX2 с проверенными контрольными суммами.
                 </p>
               </div>
             </div>
             <div className="release-banner-right">
               <a
-                href={WIIU_PORTS[0].mirrors.githubReleaseUrl || '#games/minecraft'}
-                target="_blank"
-                rel="noreferrer"
+                href={getReleaseUrl('Minecraft.WiiU.wuhb')}
+                download="Minecraft.WiiU.wuhb"
                 className="btn-tactile btn-tactile-blue"
               >
                 <Download size={17} />
-                <span>Скачать .wuhb</span>
+                <span>Minecraft .wuhb</span>
                 <span className="btn-chip">1.41 ГБ</span>
               </a>
-              <a href="#games/minecraft" className="btn-tactile btn-tactile-light">
-                <span>Открыть страницу</span>
+              <a href="#games" className="btn-tactile btn-tactile-light">
+                <span>Все 4 порта</span>
               </a>
             </div>
           </div>

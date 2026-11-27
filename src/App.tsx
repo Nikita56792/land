@@ -67,21 +67,21 @@ export default function App() {
     }
 
     if (section === 'home' && !id) {
-      document.title = 'REAL // LAB — Порты для Wii U и приложения для Mac';
+      document.title = 'Parhelio — Порты для Wii U и приложения для Mac';
     } else if (section === 'games' && game) {
-      document.title = `${stories[game.slug].name} на Wii U — REAL // LAB`;
+      document.title = `${stories[game.slug].name} на Wii U — Parhelio`;
     } else if (section === 'apps' && app) {
-      document.title = `${app.name} для Mac — REAL // LAB`;
+      document.title = `${app.name} для Mac — Parhelio`;
     } else if (section === 'updates' && note) {
-      document.title = `${note.title} — REAL // LAB`;
+      document.title = `${note.title} — Parhelio`;
     } else if (section === 'games') {
-      document.title = 'Игры для Wii U — REAL // LAB';
+      document.title = 'Игры для Wii U — Parhelio';
     } else if (section === 'apps') {
-      document.title = 'Приложения для Mac — REAL // LAB';
+      document.title = 'Приложения для Mac — Parhelio';
     } else if (section === 'updates') {
-      document.title = 'Обновления портов — REAL // LAB';
+      document.title = 'Обновления портов — Parhelio';
     } else {
-      document.title = 'Страница не найдена — REAL // LAB';
+      document.title = 'Страница не найдена — Parhelio';
     }
   }, [path, section, id, game, app, note]);
 

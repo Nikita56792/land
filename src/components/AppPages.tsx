@@ -20,6 +20,7 @@ import {
   WIIU_PORTS,
 } from '../data/catalog';
 import { appNotes, art, stories } from '../data/editorial';
+import { useSmartMirror } from '../lib/mirrors';
 import { AppSquircle } from './HomePage';
 import { AppDownloadsSection } from './AppDownloads';
 import {
@@ -116,6 +117,7 @@ export function GamesCatalogPage() {
 }
 
 export function AppsCatalogPage() {
+  const { getReleaseUrl } = useSmartMirror();
   return (
     <div className="catalog-page">
       <section className="catalog-hero">
@@ -174,11 +176,14 @@ export function AppsCatalogPage() {
 
                   <div className="rpcs-app-bottom">
                     <div className="rpcs-app-btns">
-                      {app.mirrors.githubReleaseUrl && (
+                      {(app.mirrors.cloudFileName || app.mirrors.githubReleaseUrl) && (
                         <a
-                          href={app.mirrors.githubReleaseUrl}
-                          target="_blank"
-                          rel="noreferrer"
+                          href={
+                            app.mirrors.cloudFileName
+                              ? getReleaseUrl(app.mirrors.cloudFileName)
+                              : app.mirrors.githubReleaseUrl!
+                          }
+                          download={app.mirrors.cloudFileName || undefined}
                           className={`btn-rpcs-pill btn-rpcs-${app.id}`}
                         >
                           <span className="pill-arch">ARM</span>
@@ -416,7 +421,7 @@ export function AppDetailPage({ app }: { app: MacApp }) {
 
       <section className="app-other-section">
         <div className="container">
-          <h2>Другие приложения REAL // LAB</h2>
+          <h2>Другие приложения Parhelio</h2>
           <div className="app-other-grid">
             {otherApps.map((other) => (
               <a
