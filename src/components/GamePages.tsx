@@ -34,13 +34,18 @@ function GameMediaStage({
 }: {
   game: GamePort;
   shots: GalleryShot[];
-  theme: 'minecraft' | 'buckshot' | 'slime' | 'subnautica';
+  theme: 'minecraft' | 'buckshot' | 'slime' | 'subnautica' | 'acnh';
 }) {
-  // index 0..shots.length-1 are images; -1 is video mode
-  const [active, setActive] = useState<number>(-1);
+  const hasVideo = Boolean(game.videoUrl);
+  // index 0..shots.length-1 are images; -1 is video mode (only if hasVideo)
+  const [active, setActive] = useState<number>(hasVideo ? -1 : 0);
   const total = shots.length;
 
   const step = (dir: number) => {
+    if (!hasVideo) {
+      setActive((active + dir + total) % total);
+      return;
+    }
     if (active === -1) {
       setActive(dir > 0 ? 0 : total - 1);
     } else {
@@ -59,14 +64,16 @@ function GameMediaStage({
     <div className={`media-stage media-stage-${theme}`}>
       <div className="media-stage-toolbar">
         <div className="media-mode-pills">
-          <button
-            type="button"
-            className={active === -1 ? 'is-active' : ''}
-            onClick={() => setActive(-1)}
-          >
-            <Film size={15} />
-            <span>Видео</span>
-          </button>
+          {hasVideo && (
+            <button
+              type="button"
+              className={active === -1 ? 'is-active' : ''}
+              onClick={() => setActive(-1)}
+            >
+              <Film size={15} />
+              <span>Видео</span>
+            </button>
+          )}
           <button
             type="button"
             className={active >= 0 ? 'is-active' : ''}
@@ -96,7 +103,7 @@ function GameMediaStage({
       </div>
 
       <div className="media-stage-viewport">
-        {active === -1 ? (
+        {active === -1 && hasVideo ? (
           <video
             key={game.videoUrl}
             className="media-stage-video"
@@ -109,9 +116,9 @@ function GameMediaStage({
           />
         ) : (
           <img
-            key={shots[active].src}
-            src={shots[active].src}
-            alt={shots[active].caption}
+            key={shots[Math.max(0, active)].src}
+            src={shots[Math.max(0, active)].src}
+            alt={shots[Math.max(0, active)].caption}
             className="media-stage-img"
           />
         )}
@@ -122,18 +129,20 @@ function GameMediaStage({
       </p>
 
       <div className="media-thumbs" role="list" aria-label="Миниатюры медиа">
-        <button
-          type="button"
-          className={`media-thumb media-thumb-video ${active === -1 ? 'is-active' : ''}`}
-          onClick={() => setActive(-1)}
-          aria-label="Показать видео"
-        >
-          <img src={art(game.slug, 'cover')} alt="" loading="lazy" />
-          <span className="thumb-play-badge">
-            <Play size={14} fill="currentColor" />
-            <span>Видео</span>
-          </span>
-        </button>
+        {hasVideo && (
+          <button
+            type="button"
+            className={`media-thumb media-thumb-video ${active === -1 ? 'is-active' : ''}`}
+            onClick={() => setActive(-1)}
+            aria-label="Показать видео"
+          >
+            <img src={art(game.slug, 'cover')} alt="" loading="lazy" />
+            <span className="thumb-play-badge">
+              <Play size={14} fill="currentColor" />
+              <span>Видео</span>
+            </span>
+          </button>
+        )}
 
         {shots.map((shot, idx) => (
           <button
@@ -189,7 +198,7 @@ function TechSolutionsBlock({
   theme,
 }: {
   items: TechSolution[];
-  theme: 'minecraft' | 'buckshot' | 'slime' | 'subnautica';
+  theme: 'minecraft' | 'buckshot' | 'slime' | 'subnautica' | 'acnh';
 }) {
   if (!items.length) return null;
   return (
@@ -1153,9 +1162,249 @@ function SubnauticaPage({ game }: { game: GamePort }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   5. ANIMAL CROSSING: NEW HORIZONS — Sunny Island & NookPhone Aesthetic
+   ═══════════════════════════════════════════════════════════════ */
+function AnimalCrossingPage({ game }: { game: GamePort }) {
+  const story = stories.acnh;
+
+  return (
+    <div className="game-world world-acnh">
+      {/* Sunlit Tropical Island Hero */}
+      <section
+        className="ac-hero"
+        style={{ backgroundImage: `url(${art('acnh', 'cover')})` }}
+      >
+        <div className="ac-hero-scrim" />
+        <div className="container ac-hero-inner">
+          <div className="game-top-bar">
+            <a className="ac-back-pill" href="#games">
+              <ArrowLeft size={16} />
+              <span>Все порты Wii U</span>
+            </a>
+            <span className="ac-status-pill">{story.heroTag}</span>
+          </div>
+
+          <div className="ac-hero-grid">
+            <div className="ac-hero-logo-col">
+              <h1>
+                <img
+                  src={art('acnh', 'logo')}
+                  alt="Animal Crossing: New Horizons"
+                />
+              </h1>
+              <div className="ac-floating-cutouts" aria-hidden="true">
+                <img
+                  className="ac-cutout-bob ac-cutout-1"
+                  src="./media/art/cutouts/acnh-tomnook.webp"
+                  alt=""
+                />
+                <img
+                  className="ac-cutout-bob ac-cutout-2"
+                  src="./media/art/cutouts/acnh-nookphone.webp"
+                  alt=""
+                />
+              </div>
+            </div>
+
+            <div className="ac-hero-card">
+              <span className="ac-card-eyebrow">
+                <Sparkles size={15} />
+                <span>STATIC RECOMPILATION · SWITCH → WII U</span>
+              </span>
+              <h2>Остров New Horizons на Nintendo Wii U</h2>
+              <p>{story.deck}</p>
+              <div className="ac-hero-actions">
+                <button
+                  type="button"
+                  className="ac-btn ac-btn-mint"
+                  onClick={() =>
+                    document
+                      .getElementById('ac-media')
+                      ?.scrollIntoView({ behavior: 'smooth' })
+                  }
+                >
+                  <Images size={16} />
+                  <span>Кадры живого порта</span>
+                </button>
+                <button
+                  type="button"
+                  className="ac-btn ac-btn-sand"
+                  onClick={() =>
+                    document
+                      .getElementById('ac-status')
+                      ?.scrollIntoView({ behavior: 'smooth' })
+                  }
+                >
+                  <Cpu size={16} />
+                  <span>Телеметрия Wave 9</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <ScallopDivider fill="#fffdf4" bg="#129982" />
+
+      {/* TV + Off-TV Play Hardware Spotlight + Real Tech Solutions */}
+      <section className="ac-dual-section" id="ac-dual">
+        <div className="container">
+          <div className="ac-section-center">
+            <span className="ac-kicker">TV + OFF-TV GAMEPAD &amp; TOUCH</span>
+            <h2>{story.dualTitle}</h2>
+            <p>{story.dualLead}</p>
+          </div>
+
+          <figure className="hardware-showcase hardware-showcase-acnh">
+            <img
+              src={hardwareImage('acnh')}
+              alt="Телевизор с площадью Animal Crossing: New Horizons и Wii U GamePad в режиме Off-TV Play с тачскрином"
+            />
+            <figcaption className="hardware-legend">
+              <span>
+                <Monitor size={15} /> {story.tvBadge}
+              </span>
+              <span>
+                <Gamepad2 size={15} /> {story.gamepadBadge}
+              </span>
+            </figcaption>
+          </figure>
+
+          <div className="ac-pillars-grid">
+            {story.pillars.map((p) => (
+              <div key={p.title} className="ac-pillar-card">
+                {p.image ? (
+                  <img
+                    className="ac-pillar-art"
+                    src={p.image}
+                    alt=""
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="ac-pillar-icon" aria-hidden="true">
+                    <Cpu size={28} />
+                  </span>
+                )}
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </div>
+            ))}
+          </div>
+
+          <TechSolutionsBlock items={game.techSolutions} theme="acnh" />
+        </div>
+      </section>
+
+      <ScallopDivider fill="#eefcf7" bg="#fffdf4" />
+
+      {/* Live Port & Official Screenshots Stage */}
+      <section className="ac-media-section" id="ac-media">
+        <div className="container">
+          <div className="ac-section-center">
+            <span className="ac-kicker ac-kicker-mint">
+              ЖИВЫЕ ПРОГОНЫ CEMU 2.6 И КАДРЫ ОСТРОВА
+            </span>
+            <h2>Реальный запуск порта acnh-wiiu и мир острова</h2>
+          </div>
+
+          <GameMediaStage game={game} shots={story.gallery} theme="acnh" />
+        </div>
+      </section>
+
+      <ScallopDivider fill="#fffdf4" bg="#eefcf7" />
+
+      {/* Active Development Telemetry & Build Status */}
+      <section className="ac-status-section" id="ac-status">
+        <div className="container">
+          <div className="ac-status-grid">
+            <div className="ac-panel">
+              <span className="ac-kicker">ТЕСТИРОВАНИЕ WAVE 9</span>
+              <h2>Текущая производительность (Cemu 2.6)</h2>
+              <p className="ac-panel-lead">{game.summary}</p>
+
+              <div className="ac-perf-bars">
+                <div className="ac-perf-row">
+                  <div className="ac-perf-meta">
+                    <span>Загрузка острова (LLoadIsland)</span>
+                    <strong>57–60 FPS · CPU 1–2.3 мс</strong>
+                  </div>
+                  <div className="ac-perf-track">
+                    <div className="ac-perf-fill ac-fill-mint" style={{ width: '96%' }} />
+                  </div>
+                </div>
+                <div className="ac-perf-row">
+                  <div className="ac-perf-meta">
+                    <span>Аэропорт (cDeparture · Wave 8)</span>
+                    <strong>14.5–20.7 FPS · чистый рендер</strong>
+                  </div>
+                  <div className="ac-perf-track">
+                    <div className="ac-perf-fill ac-fill-teal" style={{ width: '66%' }} />
+                  </div>
+                </div>
+                <div className="ac-perf-row">
+                  <div className="ac-perf-meta">
+                    <span>3D-остров / площадь (2 400+ draws)</span>
+                    <strong>10–14 FPS (пик 24.3) · оптимизация AcnhMain</strong>
+                  </div>
+                  <div className="ac-perf-track">
+                    <div className="ac-perf-fill ac-fill-amber" style={{ width: '44%' }} />
+                  </div>
+                </div>
+                <div className="ac-perf-row">
+                  <div className="ac-perf-meta">
+                    <span>Дифференциальные тесты Unicorn (ARM64 vs C)</span>
+                    <strong>10 378 / 10 378 PASS (0 ULP)</strong>
+                  </div>
+                  <div className="ac-perf-track">
+                    <div className="ac-perf-fill ac-fill-mint" style={{ width: '100%' }} />
+                  </div>
+                </div>
+              </div>
+
+              {game.notice && (
+                <p className="game-notice-box game-notice-acnh">{game.notice}</p>
+              )}
+            </div>
+
+            <div className="ac-panel">
+              <span className="ac-kicker">СБОРКА И ВЕРИФИКАЦИЯ</span>
+              <h2>Статус релиза и спецификации</h2>
+              <DownloadButtons mirrors={game.mirrors} variant="acnh" />
+              <CopyPathPill value={game.installPath} label="Целевой путь WUP Installer" />
+
+              <dl className="specs-dl ac-dl">
+                {game.telemetry.map((t) => (
+                  <div key={t.label}>
+                    <dt>{t.label}</dt>
+                    <dd>{t.value}</dd>
+                  </div>
+                ))}
+                <div>
+                  <dt>Движок / стек</dt>
+                  <dd>{game.engineStack}</dd>
+                </div>
+              </dl>
+              <p className="sr-credit">{story.developerCredit}</p>
+            </div>
+          </div>
+
+          <div className="ac-faq-wrap">
+            <h3>Вопросы по рекомпиляции Animal Crossing</h3>
+            <FaqAccordion items={story.faq} />
+          </div>
+        </div>
+      </section>
+
+      <PortUpdatesStrip gameSlug="acnh" theme="light" />
+    </div>
+  );
+}
+
 export function GameDetailPage({ game }: { game: GamePort }) {
   if (game.slug === 'minecraft') return <MinecraftPage game={game} />;
   if (game.slug === 'buckshot') return <BuckshotPage game={game} />;
   if (game.slug === 'slime') return <SlimeRancherPage game={game} />;
+  if (game.slug === 'acnh') return <AnimalCrossingPage game={game} />;
   return <SubnauticaPage game={game} />;
 }

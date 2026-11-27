@@ -17,10 +17,8 @@ export interface MirrorLinks {
   cloudFileName?: string;
   sizeLabel: string;
   packages?: ReleasePackage[];
-  githubReleaseUrl: string | null;
-  githubReleaseTag?: string;
+  releaseTag?: string;
   githubRepoUrl: string | null;
-  itchUrl?: string | null;
 }
 
 export interface TechSolution {
@@ -153,7 +151,7 @@ export const WIIU_PORTS: GamePort[] = [
       'Два независимых полных экрана (SeparateGamePad): TV 16:9 для P1 и GamePad 854×480 для P2 с собственными камерами и HUD',
       'Кастомный fused-шейдер AMD FidelityFX CAS (sharpness 0.38) + Gamma для вывода 1080p на TV и прямой сэмплинг 720p на DRC',
       'Аппаратно разделённый звук Miles/BinkA на Core 2 (AXInit, 128 голосов): два 3D-слушателя и два музыкальных потока (HDMI vs GamePad 3.5 мм)',
-      'Два готовых формата: автономный .wuhb для Aroma и полный WUP Installer (Title ID 00050000101D7500 v688) для установки в NAND/USB',
+      'Два готовых формата на зеркалах Parhelio: автономный .wuhb для Aroma и полный WUP Installer (Title ID 00050000101D7500 v688)',
     ],
     techSolutions: [
       {
@@ -192,6 +190,7 @@ export const WIIU_PORTS: GamePort[] = [
       serverFileName: 'Minecraft.WiiU.wuhb',
       cloudFileName: 'Minecraft.WiiU.wuhb',
       sizeLabel: '1.41 ГБ',
+      releaseTag: 'v688',
       packages: [
         {
           id: 'mc-wuhb',
@@ -211,10 +210,7 @@ export const WIIU_PORTS: GamePort[] = [
           installPath: 'sd:/install/Minecraft_WiiU/',
         },
       ],
-      githubReleaseUrl:
-        'https://github.com/Nikita56792/land/releases/download/mcwiiu-dualscreen-v1.0/Minecraft.WiiU-DualScreenUI.wuhb',
-      githubReleaseTag: 'mcwiiu-dualscreen-v1.0',
-      githubRepoUrl: 'https://github.com/Nikita56792/land/releases/tag/mcwiiu-dualscreen-v1.0',
+      githubRepoUrl: null,
     },
   },
   {
@@ -274,12 +270,14 @@ export const WIIU_PORTS: GamePort[] = [
       { label: 'Графика', value: '720p→1080p AMD CAS · 30 FPS · 28 .gsh' },
       { label: 'Языки / Режим', value: '17 языков · SP + локальный 2P (без онлайна)' },
     ],
-    notice: 'Сетевой мультиплеер (Join Game) отключён — доступны полная одиночная кампания против Дилера и локальный 1v1 (TV + GamePad). Сохранения .wuhb пишутся в SD:/save/openbr/.',
+    notice:
+      'Сетевой мультиплеер (Join Game) отключён — доступны полная одиночная кампания против Дилера и локальный 1v1 (TV + GamePad). Сохранения .wuhb пишутся в SD:/save/openbr/.',
     mirrors: {
       serverPath: './downloads/BuckshotRoulette.wuhb',
       serverFileName: 'BuckshotRoulette.wuhb',
       cloudFileName: 'BuckshotRoulette.wuhb',
       sizeLabel: '303 МБ',
+      releaseTag: 'Build 116',
       packages: [
         {
           id: 'br-wuhb',
@@ -299,7 +297,6 @@ export const WIIU_PORTS: GamePort[] = [
           installPath: 'sd:/install/BuckshotRoulette_WiiU/',
         },
       ],
-      githubReleaseUrl: null,
       githubRepoUrl: null,
     },
   },
@@ -365,6 +362,7 @@ export const WIIU_PORTS: GamePort[] = [
       serverFileName: 'SlimeRancher_WiiU_NoLog-WUP.zip',
       cloudFileName: 'SlimeRancher_WiiU_NoLog-WUP.zip',
       sizeLabel: '902 МБ',
+      releaseTag: 'v42-nolog',
       packages: [
         {
           id: 'sr-wup',
@@ -376,7 +374,71 @@ export const WIIU_PORTS: GamePort[] = [
           primary: true,
         },
       ],
-      githubReleaseUrl: null,
+      githubRepoUrl: null,
+    },
+  },
+  {
+    id: 'animal-crossing-nh',
+    slug: 'acnh',
+    title: 'Animal Crossing: New Horizons',
+    subtitle: 'Static Recomp (Switch AArch64 → Wii U PPC32) · Wave 9',
+    badge: 'Активная разработка · Wave 9',
+    statusTone: 'wip',
+    engineStack: 'AArch64 → C → PowerPC32 Recomp · WUT · NVN → GX2',
+    dualScreenMode: 'TV 720p (DRS + Luma CAS) + GamePad Off-TV Play & Touch',
+    tvRole: '3D-остров v1.0.0: 5-ступенчатый DRS 75–100% + AMD CAS + 720p UI',
+    gamepadRole: 'Аппаратное зеркало Off-TV (854×480) + тачскрин 1280×720 + гироскоп',
+    fpsTarget: 'Загрузка 57–60 · Аэропорт 15–21 · Остров 10–14 FPS (Cemu)',
+    installPath: 'sd:/install/ACNH_WiiU_WUP/ (тестирование)',
+    videoUrl: '',
+    accentHex: '#1BB59B',
+    summary:
+      'Нативная статическая рекомпиляция оригинального кода Animal Crossing: New Horizons v1.0.0 с Nintendo Switch (AArch64 / NVN) в нативный PowerPC32 Big-Endian для Wii U Cafe OS: 149 716 рекомпилированных функций в 13 модулях, 4 299 шейдеров Maxwell→Latte GX2, 62 нативных C HLE и полный звук AX DSP.',
+    highlights: [
+      'Собственный статический рекомпилятор AArch64 → C → PPC32: 149 716 функций (acnh.rpx + 12 .rpl) и PGO-модуль acnh_hot_0.rpl (1.22 МБ целиком в 2 МБ L2 кэше Core 1)',
+      '62 нативных C HLE (Tiers 1–5 с Espresso Paired Singles SIMD) + 20 перехватов fontll и AES-128: 10 378 / 10 378 дифференциальных тестов Unicorn (0 ULP) PASS',
+      'Транслятор NVN → Latte GX2 на Core 0: 4 299 шейдеров (0 ошибок), MEM1 теневая карта 768×768 D16+HiZ, 5-ступенчатый 3D-only DRS + Luma AMD CAS и нативный 720p UI',
+      'Полный audren:u/audout:u на sndcore2 AX DSP 48 кГц (TV + DRC), 66 793 файла RomFS перепакованы в быстрый WLZ4/BC1–5 (6.3 → 3.4 ГБ) и WUP 3.6 ГБ (AES/TMD PASS)',
+    ],
+    techSolutions: [
+      {
+        tag: 'AARCH64 → PPC32 RECOMP',
+        title: '149 716 функций в 13 .rpl + 1.22 МБ горячий L2-блок',
+        detail:
+          'Прямая статическая рекомпиляция Switch v1.0.0 без эмуляции: 10/18 регистров PPC32 (-68.3% spills), 51 357 байпасов и PGO-упорядоченный acnh_hot_0.rpl (1 403 функции), полностью помещающийся в 2 МБ L2 Core 1.',
+      },
+      {
+        tag: '62 NATIVE C HLE · 0 ULP',
+        title: 'Tiers 1–5 + Espresso Paired Singles SIMD',
+        detail:
+          'Критические циклы g3d-скелетов, окклюзии, BCSV, ветра/листвы, LiSPSM и nn::vfx переписаны на нативный C + SIMD PPC750CL. Верифицировано 10 378 / 10 378 тестами Unicorn ARM64 vs C с точностью 0 ULP.',
+      },
+      {
+        tag: 'NVN → LATTE GX2 + CAS',
+        title: '4 299 шейдеров Maxwell→R600, MEM1 тени и 3D DRS',
+        detail:
+          'Асинхронная очередь GX2 на Core 0 (-90% GX2Invalidate), zero-copy UBO, теневая карта 768×768 D16+HiZ в MEM1, 5-ступенчатый DRS (432p–576p) + Luma AMD CAS до 720p и нативный 720p UI.',
+      },
+      {
+        tag: 'ROMFS WLZ4 + AX DSP',
+        title: 'Сжатие 6.3 → 3.4 ГБ, BC1–5 без GOB и живой звук',
+        detail:
+          '61 597 архивов перепакованы из Zstd/Yaz0 в WLZ4 (3–5× быстрее на Espresso), ASTC/BC7 переведены в нативный BC1–5, OpeningMovie — в H.264 720p30. Аудио audren:u работает на AX DSP 48 кГц + Off-TV Play и тачскрин.',
+      },
+    ],
+    telemetry: [
+      { label: 'Стадия / Title ID', value: 'Wave 9 · 0005000021AC0001 (WUP-P-ACNH)' },
+      { label: 'Загрузка / Аэропорт', value: '57–60 FPS (загрузка) · 14.5–20.7 FPS (аэропорт)' },
+      { label: '3D-остров (Cemu)', value: '10–14 FPS (пик 24.3) · MEM1 free · fb=0' },
+      { label: 'Пакет WUP / Статус', value: '3.6 ГБ (AES/TMD PASS) · тестирование' },
+    ],
+    notice:
+      'Идёт активная разработка и тестирование (Wave 9): оптимизируется однопоточный бюджет AcnhMain на 3D-острове и готовится калибровочный прогон WUP-пакета (3.6 ГБ) на физической Wii U. GamePad сейчас работает в режиме аппаратного Off-TV Play с тачскрином и гироскопом.',
+    mirrors: {
+      serverPath: './downloads/ACNH_WiiU_WUP.zip',
+      serverFileName: 'ACNH_WiiU_WUP.zip',
+      sizeLabel: 'Wave 9 (тестирование)',
+      releaseTag: 'wave-9',
       githubRepoUrl: null,
     },
   },
@@ -429,12 +491,13 @@ export const WIIU_PORTS: GamePort[] = [
       { label: 'Шейдеры / Память', value: '5 600 GX2 · Alloc 554–563 МБ' },
       { label: 'Размер / Статус', value: '9.2 ГБ WUP · активная оптимизация' },
     ],
-    notice: 'Промежуточная R&D-сборка v18: публичная раздача ещё не открыта — идёт оптимизация стриминга чанков океана под железо Wii U и проработка формата чистого адаптера.',
+    notice:
+      'Промежуточная R&D-сборка v18: публичная раздача ещё не открыта — идёт оптимизация стриминга чанков океана под железо Wii U и проработка формата чистого адаптера.',
     mirrors: {
       serverPath: './downloads/Subnautica-WiiU-Adapter.zip',
       serverFileName: 'Subnautica-WiiU-Adapter.zip',
       sizeLabel: 'R&D v18 (в работе)',
-      githubReleaseUrl: null,
+      releaseTag: 'v18-rd',
       githubRepoUrl: null,
     },
   },
@@ -444,17 +507,26 @@ export const PORTING_PIPELINE = [
   {
     code: 'REDHILLS C++',
     title: 'Реконструкция C++ под Cafe OS (Minecraft)',
-    detail: 'Сборка 3 753 .cpp файлов через RedHills (Clang 19 / Green Hills ABI) + WUT с кастомным GX2 Dual-Screen, AMD CAS 1080p и 2P-звуком Miles/AX.',
+    detail:
+      'Сборка 3 753 .cpp файлов через RedHills (Clang 19 / Green Hills ABI) + WUT с кастомным GX2 Dual-Screen, AMD CAS 1080p и 2P-звуком Miles/AX.',
   },
   {
     code: 'GD → C++20 / GX2',
     title: 'Транслятор Godot → PowerPC (Buckshot Roulette)',
-    detail: 'Перевод GDScript в нативный C++20 с корутинами, офлайн-шейдерами CafeGLSL, AMD CAS 720p→1080p и аппаратным звуком AX DSP + IMA-ADPCM.',
+    detail:
+      'Перевод GDScript в нативный C++20 с корутинами, офлайн-шейдерами CafeGLSL, AMD CAS 720p→1080p и аппаратным звуком AX DSP + IMA-ADPCM.',
   },
   {
     code: 'UNITY → FULL-AOT',
     title: 'Пайплайн Unity → RPX + SIMD (Slime / Subnautica)',
-    detail: '100% Full-AOT компиляция C# под PowerPC, конвертация тысяч DX11-шейдеров в GX2, PVS-окклюзия, Luma AMD CAS и нативные C-плагины Core 2.',
+    detail:
+      '100% Full-AOT компиляция C# под PowerPC, конвертация тысяч DX11-шейдеров в GX2, PVS-окклюзия, Luma AMD CAS и нативные C-плагины Core 2.',
+  },
+  {
+    code: 'AARCH64 → PPC32',
+    title: 'Статический рекомпилятор Switch → Wii U (ACNH)',
+    detail:
+      'Статическая рекомпиляция ARM64 в PowerPC32 (149 716 функций), трансляция NVN → Latte GX2 (4 299 шейдеров), 62 нативных C HLE (0 ULP) и WLZ4 RomFS.',
   },
 ];
 
@@ -464,7 +536,8 @@ export const MAC_APPS: MacApp[] = [
     name: 'Epidaurus',
     previousName: 'ex-RealPlayer',
     version: 'v0.2.0',
-    tagline: 'Нативный медиаплеер для Apple Silicon: VVC/H.266, HDR/Dolby Vision, объектный Dolby Atmos и прямой стриминг торрентов',
+    tagline:
+      'Нативный медиаплеер для Apple Silicon: VVC/H.266, HDR/Dolby Vision, объектный Dolby Atmos и прямой стриминг торрентов',
     platform: 'macOS 15+ · Apple Silicon',
     license: 'GPL-3.0-or-later',
     iconUrl: './media/apps/epidaurus-icon.png',
@@ -490,8 +563,7 @@ export const MAC_APPS: MacApp[] = [
       serverFileName: 'Epidaurus-0.2.0.dmg',
       cloudFileName: 'Epidaurus-0.2.0.dmg',
       sizeLabel: '31 МБ (.dmg)',
-      githubReleaseUrl: 'https://github.com/Nikita56792/epidaurus/releases/download/v0.2.0/Epidaurus-0.2.0.dmg',
-      githubReleaseTag: 'v0.2.0',
+      releaseTag: 'v0.2.0',
       githubRepoUrl: 'https://github.com/Nikita56792/epidaurus',
     },
   },
@@ -500,7 +572,8 @@ export const MAC_APPS: MacApp[] = [
     name: 'Kraken',
     previousName: 'KrakenFS / Kraken Disk',
     version: 'v0.4.0',
-    tagline: 'Прозрачное сжатие и BLAKE3-дедупликация на Mac (~2.1×–4.0× экономии SSD) на скорости чтения до 14–20 ГБ/с',
+    tagline:
+      'Прозрачное сжатие и BLAKE3-дедупликация на Mac (~2.1×–4.0× экономии SSD) на скорости чтения до 14–20 ГБ/с',
     platform: 'macOS · Apple Silicon',
     license: 'Open Source',
     iconUrl: '',
@@ -532,8 +605,7 @@ export const MAC_APPS: MacApp[] = [
       serverFileName: 'Kraken-0.4.0.pkg',
       cloudFileName: 'Kraken-0.4.0.pkg',
       sizeLabel: '9.9 МБ (.pkg)',
-      githubReleaseUrl: 'https://github.com/Nikita56792/kraken/releases/download/v0.4.0/Kraken-0.4.0.pkg',
-      githubReleaseTag: 'v0.4.0',
+      releaseTag: 'v0.4.0',
       githubRepoUrl: 'https://github.com/Nikita56792/kraken',
     },
   },
@@ -541,7 +613,8 @@ export const MAC_APPS: MacApp[] = [
     id: 'real3d',
     name: 'Real3D',
     version: 'v1.2.0',
-    tagline: 'Преобразование любого 2D-экрана, игры или фильма в реальное стерео 3D (Full SBS 3840×1080 @ 60 FPS) для XREAL',
+    tagline:
+      'Преобразование любого 2D-экрана, игры или фильма в реальное стерео 3D (Full SBS 3840×1080 @ 60 FPS) для XREAL',
     platform: 'macOS 14+ · Apple Silicon',
     license: 'Open Source',
     iconUrl: './media/apps/real3d-icon.png',
@@ -571,8 +644,7 @@ export const MAC_APPS: MacApp[] = [
       serverFileName: 'Real3D-1.2.0.dmg',
       cloudFileName: 'Real3D-1.2.0.dmg',
       sizeLabel: '857 МБ (.dmg)',
-      githubReleaseUrl: 'https://github.com/Nikita56792/real3d/releases/download/v1.2.0/Real3D-1.2.0.dmg',
-      githubReleaseTag: 'v1.2.0',
+      releaseTag: 'v1.2.0',
       githubRepoUrl: 'https://github.com/Nikita56792/real3d',
     },
   },
@@ -609,8 +681,7 @@ export const MAC_APPS: MacApp[] = [
       serverFileName: 'Fovea-1.0.0.dmg',
       cloudFileName: 'Fovea-1.0.0.dmg',
       sizeLabel: '164 МБ (.dmg)',
-      githubReleaseUrl: 'https://github.com/Nikita56792/fovea/releases/download/v1.0.0/Fovea-1.0.0.dmg',
-      githubReleaseTag: 'v1.0.0',
+      releaseTag: 'v1.0.0',
       githubRepoUrl: 'https://github.com/Nikita56792/fovea',
     },
   },

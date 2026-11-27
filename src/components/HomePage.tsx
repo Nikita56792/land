@@ -243,7 +243,7 @@ export function HomePage() {
               <a className="btn-tactile btn-hero-glass" href="#games">
                 <Gamepad2 size={18} />
                 <span>Игры Wii U</span>
-                <span className="btn-chip-emerald">4 порта</span>
+                <span className="btn-chip-emerald">5 портов</span>
               </a>
               <a className="btn-tactile btn-hero-subtle" href="#apps">
                 <Laptop size={18} />
@@ -364,7 +364,7 @@ export function HomePage() {
               <h2>Приложения для Mac</h2>
               <p className="section-sub">
                 Нативные инструменты на Rust, SwiftUI, Metal и Core ML —
-                готовые установщики .dmg и .pkg на GitHub и локальном зеркале.
+                готовые установщики .dmg и .pkg на облачных зеркалах Parhelio.
               </p>
             </div>
             <a className="section-more-link" href="#apps">
@@ -403,14 +403,10 @@ export function HomePage() {
 
                   <div className="rpcs-app-bottom">
                     <div className="rpcs-app-btns">
-                      {(app.mirrors.cloudFileName || app.mirrors.githubReleaseUrl) && (
+                      {app.mirrors.cloudFileName && (
                         <a
-                          href={
-                            app.mirrors.cloudFileName
-                              ? getReleaseUrl(app.mirrors.cloudFileName)
-                              : app.mirrors.githubReleaseUrl!
-                          }
-                          download={app.mirrors.cloudFileName || undefined}
+                          href={getReleaseUrl(app.mirrors.cloudFileName)}
+                          download={app.mirrors.cloudFileName}
                           className={`btn-rpcs-pill btn-rpcs-${app.id}`}
                         >
                           <span className="pill-arch">ARM</span>
@@ -578,7 +574,7 @@ export function HomePage() {
                 <span className="btn-chip">1.41 ГБ</span>
               </a>
               <a href="#games" className="btn-tactile btn-tactile-light">
-                <span>Все 4 порта</span>
+                <span>Все 5 портов</span>
               </a>
             </div>
           </div>

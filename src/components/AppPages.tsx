@@ -40,9 +40,9 @@ export function GamesCatalogPage() {
           </span>
           <h1>Игровые порты для Wii U</h1>
           <p className="catalog-lead">
-            Четыре проекта с уникальным использованием второго экрана Wii U
-            GamePad — от полноценного кооператива без split-screen до
-            экспериментального переноса Unity-игр.
+            Пять проектов с уникальным использованием второго экрана Wii U
+            GamePad — от полноценного кооператива без split-screen до переноса
+            Unity- и Switch-игр.
           </p>
         </div>
       </section>
@@ -176,14 +176,10 @@ export function AppsCatalogPage() {
 
                   <div className="rpcs-app-bottom">
                     <div className="rpcs-app-btns">
-                      {(app.mirrors.cloudFileName || app.mirrors.githubReleaseUrl) && (
+                      {app.mirrors.cloudFileName && (
                         <a
-                          href={
-                            app.mirrors.cloudFileName
-                              ? getReleaseUrl(app.mirrors.cloudFileName)
-                              : app.mirrors.githubReleaseUrl!
-                          }
-                          download={app.mirrors.cloudFileName || undefined}
+                          href={getReleaseUrl(app.mirrors.cloudFileName)}
+                          download={app.mirrors.cloudFileName}
                           className={`btn-rpcs-pill btn-rpcs-${app.id}`}
                         >
                           <span className="pill-arch">ARM</span>

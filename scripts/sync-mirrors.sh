@@ -82,15 +82,15 @@ sync_files() {
     "Minecraft_WiiU-WUP.zip" || true
 
   local -a entries=(
-    "/Users/nikitasyzdykov/Downloads/mcwiiu-reconstructed-main/build/wiiu/Minecraft.WiiU.wuhb|Minecraft.WiiU.wuhb"
-    "$STAGE/Minecraft_WiiU-WUP.zip|Minecraft_WiiU-WUP.zip"
+    "/Users/nikitasyzdykov/Kraken Disk/Desktop/kraken/dist/Kraken-0.4.0.pkg|Kraken-0.4.0.pkg"
+    "/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/realgame/app/build/Epidaurus-0.2.0.dmg|Epidaurus-0.2.0.dmg"
+    "/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/eye_track/build/Fovea-1.0.0.dmg|Fovea-1.0.0.dmg"
     "/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/OpenBuckshotRoulette-main/releases/WiiU/2026-11-27_Build116_v44/WUHB/BuckshotRoulette.wuhb|BuckshotRoulette.wuhb"
     "$STAGE/BuckshotRoulette_WiiU-WUP.zip|BuckshotRoulette_WiiU-WUP.zip"
-    "$STAGE/SlimeRancher_WiiU_NoLog-WUP.zip|SlimeRancher_WiiU_NoLog-WUP.zip"
-    "/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/realgame/app/build/Epidaurus-0.2.0.dmg|Epidaurus-0.2.0.dmg"
-    "/Users/nikitasyzdykov/Kraken Disk/Desktop/kraken/dist/Kraken-0.4.0.pkg|Kraken-0.4.0.pkg"
     "/Users/nikitasyzdykov/Kraken Disk/Desktop/real3d/checkpoints/Real3D-1.2.0.dmg|Real3D-1.2.0.dmg"
-    "/Users/nikitasyzdykov/Kraken Disk/Desktop/what-to-do/eye_track/build/Fovea-1.0.0.dmg|Fovea-1.0.0.dmg"
+    "$STAGE/SlimeRancher_WiiU_NoLog-WUP.zip|SlimeRancher_WiiU_NoLog-WUP.zip"
+    "/Users/nikitasyzdykov/Downloads/mcwiiu-reconstructed-main/build/wiiu/Minecraft.WiiU.wuhb|Minecraft.WiiU.wuhb"
+    "$STAGE/Minecraft_WiiU-WUP.zip|Minecraft_WiiU-WUP.zip"
   )
 
   local -a targets=()
@@ -125,10 +125,10 @@ sync_files() {
         echo "==> Syncing $dst -> ${remote_spec}/releases/${dst}"
         rclone copyto "$src" "${remote_spec}/releases/${dst}" \
           --s3-no-check-bucket \
-          --s3-chunk-size 64M \
+          --s3-chunk-size 16M \
           --s3-upload-concurrency 4 \
           --header-upload "Cache-Control: public, max-age=31536000, immutable" \
-          --stats 15s --stats-one-line
+          --stats-log-level NOTICE --stats 30s --stats-one-line
       else
         echo "WARN: missing source file, skipping: $src"
       fi
@@ -160,5 +160,5 @@ sync_site() {
   echo "==> Done! Site synced to yandex:${YANDEX_BUCKET}"
 }
 
-[[ $DO_FILES -eq 1 ]] && sync_files
-[[ $DO_SITE -eq 1 ]] && sync_site
+if [[ $DO_FILES -eq 1 ]]; then sync_files; fi
+if [[ $DO_SITE -eq 1 ]]; then sync_site; fi

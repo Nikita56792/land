@@ -4,7 +4,7 @@ export type MirrorRegion = 'ru' | 'global';
 export type MirrorPreference = 'auto' | MirrorRegion;
 
 export const MIRROR_BASES: Record<MirrorRegion, string> = {
-  ru: 'https://parhelio-ru-storage.s3.cloud.ru',
+  ru: 'https://parhelio-dl.s3.cloud.ru',
   global: 'https://dl.parhelio.ru',
 };
 

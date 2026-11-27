@@ -19,7 +19,7 @@ import {
 
 interface DownloadButtonsProps {
   mirrors: MirrorLinks;
-  variant?: 'default' | 'minecraft' | 'buckshot' | 'slime' | 'subnautica';
+  variant?: 'default' | 'minecraft' | 'buckshot' | 'slime' | 'subnautica' | 'acnh';
   compact?: boolean;
 }
 
@@ -80,7 +80,9 @@ export function DownloadButtons({
           ? 'sr-btn sr-btn-pink'
           : variant === 'subnautica'
             ? 'sn-btn sn-btn-cyan'
-            : 'btn-tactile btn-tactile-blue';
+            : variant === 'acnh'
+              ? 'ac-btn ac-btn-mint'
+              : 'btn-tactile btn-tactile-blue';
 
   const secondaryClass =
     variant === 'minecraft'
@@ -91,13 +93,14 @@ export function DownloadButtons({
           ? 'sr-btn sr-btn-white'
           : variant === 'subnautica'
             ? 'sn-btn sn-btn-ghost'
-            : 'btn-tactile btn-tactile-light';
+            : variant === 'acnh'
+              ? 'ac-btn ac-btn-sand'
+              : 'btn-tactile btn-tactile-light';
 
   const isDarkTheme = variant === 'buckshot' || variant === 'subnautica';
   const packages = mirrors.packages ?? [];
   const hasPackages = packages.length > 0;
-  const hasAnyDownload =
-    hasPackages || Boolean(mirrors.cloudFileName) || Boolean(mirrors.githubReleaseUrl);
+  const hasAnyDownload = hasPackages || Boolean(mirrors.cloudFileName);
 
   return (
     <div className="dl-stack">
@@ -127,21 +130,6 @@ export function DownloadButtons({
               </a>
             )}
 
-        {mirrors.githubReleaseUrl && (
-          <a
-            className={hasPackages || mirrors.cloudFileName ? secondaryClass : primaryClass}
-            href={mirrors.githubReleaseUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Download size={17} />
-            <span>{compact ? 'GitHub' : 'Зеркало GitHub'}</span>
-            {!hasPackages && !mirrors.cloudFileName && (
-              <span className="btn-chip">{mirrors.sizeLabel}</span>
-            )}
-          </a>
-        )}
-
         {mirrors.githubRepoUrl && (
           <a
             className={secondaryClass}
@@ -150,11 +138,7 @@ export function DownloadButtons({
             rel="noreferrer"
           >
             <Github size={17} />
-            <span>
-              {mirrors.githubRepoUrl.includes('/releases/')
-                ? 'Релиз GitHub'
-                : 'GitHub'}
-            </span>
+            <span>Исходный код</span>
             {!compact && <ExternalLink size={14} className="opacity-65" />}
           </a>
         )}
@@ -163,8 +147,9 @@ export function DownloadButtons({
           <div className={`dl-pending dl-pending-${variant}`}>
             <Clock size={16} />
             <span>
-              Сборка в активной разработке ({mirrors.sizeLabel}). Ссылки на
-              облачные зеркала Parhelio появятся сразу после публикации.
+              Сборка в активной разработке и тестировании ({mirrors.sizeLabel}).
+              Ссылки на облачные зеркала Parhelio (РФ / Мир) появятся сразу
+              после стабилизации билда.
             </span>
           </div>
         )}

@@ -194,7 +194,7 @@ function ComingSoonModal({
         </h2>
         <p className="support-modal-lead">
           Сборка под <strong>{info.osLabel} ({info.archLabel})</strong> пока не
-          опубликована — скоро добавим её сюда и в GitHub Releases. Сейчас уже
+          опубликована — скоро добавим её на зеркала Parhelio. Сейчас уже
           доступна актуальная версия для macOS (Apple Silicon).
         </p>
 
@@ -209,12 +209,12 @@ function ComingSoonModal({
           {repoUrl && (
             <a
               className="btn-tactile btn-tactile-light"
-              href={`${repoUrl}/releases`}
+              href={repoUrl}
               target="_blank"
               rel="noreferrer"
             >
               <Github size={16} />
-              <span>Релизы на GitHub</span>
+              <span>Исходный код на GitHub</span>
               <ExternalLink size={14} />
             </a>
           )}
@@ -277,9 +277,6 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
     archLabel: string;
   } | null>(null);
 
-  const releasesUrl = app.mirrors.githubRepoUrl
-    ? `${app.mirrors.githubRepoUrl}/releases`
-    : null;
   const commitsUrl = app.mirrors.githubRepoUrl
     ? `${app.mirrors.githubRepoUrl}/commits`
     : null;
@@ -288,7 +285,7 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
   const cloudUrl = app.mirrors.cloudFileName
     ? getReleaseUrl(app.mirrors.cloudFileName)
     : null;
-  const macArmUrl = os?.macosArm64?.url ?? cloudUrl ?? app.mirrors.githubReleaseUrl;
+  const macArmUrl = os?.macosArm64?.url ?? cloudUrl;
   const macArmSize = os?.macosArm64?.sizeLabel ?? app.mirrors.sizeLabel;
 
   const macPackages: PlatformPackage[] = [
@@ -367,7 +364,7 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
                 <span className="meta-pill-purple">
                   <Tag size={13} />
                   <span>Тег</span>
-                  <b>{app.mirrors.githubReleaseTag || app.version}</b>
+                  <b>{app.mirrors.releaseTag || app.version}</b>
                 </span>
                 <span className="meta-pill-orange">
                   <Package size={13} />
@@ -384,15 +381,14 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
           </div>
 
           <div className="latest-build-right">
-            {app.mirrors.githubReleaseUrl && (
+            {cloudUrl && (
               <a
                 className="btn-tactile btn-tactile-blue"
-                href={app.mirrors.githubReleaseUrl}
-                target="_blank"
-                rel="noreferrer"
+                href={cloudUrl}
+                download={app.mirrors.cloudFileName || app.mirrors.serverFileName}
               >
-                <HardDrive size={16} />
-                <span>Зеркало GitHub</span>
+                <Download size={16} />
+                <span>Скачать ({app.version})</span>
               </a>
             )}
             {app.mirrors.githubRepoUrl && (
@@ -403,7 +399,7 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
                 rel="noreferrer"
               >
                 <Github size={16} />
-                <span>Репозиторий</span>
+                <span>Исходный код</span>
                 <ExternalLink size={14} />
               </a>
             )}
@@ -547,42 +543,42 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
           </div>
         </div>
 
-        {/* Previous Builds Wide Card (Exact RPCS3 Previous Builds Card!) */}
+        {/* Source Code & Build History Wide Card */}
         <div className="prev-builds-card">
           <div className="prev-builds-body">
             <div className="prev-builds-head">
               <span className="prev-builds-icon">
                 <History size={22} />
               </span>
-              <h3>Предыдущие сборки</h3>
+              <h3>Исходный код и история изменений</h3>
             </div>
             <p>
-              В архиве релизов доступны метаданные каждого выпуска: теги версий,
-              список изменений, контрольные суммы и привязанные установщики. Для
-              истории разработки можно открыть{' '}
+              Все установочные образы раздаются напрямую с облачных зеркал
+              Parhelio (РФ / Мир). Исходные тексты, архитектуру и историю
+              разработки можно изучить в{' '}
               {commitsUrl ? (
                 <a href={commitsUrl} target="_blank" rel="noreferrer">
-                  журнал коммитов на GitHub
+                  журнале коммитов на GitHub
                 </a>
               ) : (
-                'журнал коммитов на GitHub'
+                'журнале коммитов на GitHub'
               )}
               .
             </p>
             <div className="prev-builds-actions">
-              {releasesUrl ? (
+              {app.mirrors.githubRepoUrl ? (
                 <a
-                  href={releasesUrl}
+                  href={app.mirrors.githubRepoUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="os-dl-pill os-dl-blue prev-builds-btn"
                 >
                   <span className="os-dl-chip">
-                    <History size={14} />
+                    <Github size={14} />
                   </span>
                   <span className="os-dl-text">
-                    <strong>Все предыдущие сборки</strong>
-                    <small>GitHub Releases</small>
+                    <strong>Репозиторий кода</strong>
+                    <small>GitHub · Open Source</small>
                   </span>
                 </a>
               ) : (
@@ -592,7 +588,7 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
                   onClick={() =>
                     setSoonInfo({
                       appName: app.name,
-                      osLabel: 'архива сборок',
+                      osLabel: 'исходного кода',
                       archLabel: 'GitHub',
                     })
                   }
@@ -601,21 +597,20 @@ export function AppDownloadsSection({ app }: { app: MacApp }) {
                     <Info size={14} />
                   </span>
                   <span className="os-dl-text">
-                    <strong>Архив сборок</strong>
+                    <strong>Исходный код</strong>
                     <small>Скоро</small>
                   </span>
                 </button>
               )}
 
-              {app.mirrors.githubReleaseUrl && (
+              {cloudUrl && (
                 <a
-                  href={app.mirrors.githubReleaseUrl}
-                  target="_blank"
-                  rel="noreferrer"
+                  href={cloudUrl}
+                  download={app.mirrors.cloudFileName || app.mirrors.serverFileName}
                   className="btn-tactile btn-tactile-light"
                 >
-                  <Download size={16} />
-                  <span>Прямая ссылка ({app.version})</span>
+                  <HardDrive size={16} />
+                  <span>Скачать с Parhelio ({app.version})</span>
                 </a>
               )}
             </div>

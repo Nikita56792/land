@@ -246,6 +246,61 @@ export const stories: Record<string, GameStory> = {
     ],
     developerCredit: 'Оригинальная игра: Unknown Worlds Entertainment · R&D v18 порт: Parhelio / Nikita56792',
   },
+
+  acnh: {
+    name: 'Animal Crossing: New Horizons',
+    shortTitle: 'Animal Crossing',
+    genre: 'Симулятор жизни · Остров',
+    status: 'Разработка · Wave 9',
+    players: '1 игрок · TV + Off-TV GamePad',
+    deck: 'Статическая рекомпиляция Switch v1.0.0 (AArch64 → PowerPC32) под Wii U Cafe OS: 149 716 функций, 4 299 шейдеров GX2, 62 нативных C HLE и живой 3D-остров.',
+    heroTag: 'Static Recomp · Wave 9 · Активное тестирование',
+    dualTitle: 'Остров на телевизоре и Off-TV Play с тачскрином на GamePad',
+    dualLead:
+      'В текущей сборке Wave 9 экран Wii U GamePad работает через аппаратный даунскейлер Latte (854×480 Off-TV Play) с калиброванной проекцией тачскрина в 1280×720 Switch, 6-осевым гироскопом, вибрацией и поддержкой Pro Controller.',
+    tvBadge: 'TV · 5-ступенчатый DRS + Luma AMD CAS → 720p + 720p UI',
+    gamepadBadge: 'GamePad · Аппаратный Off-TV Play + тачскрин + 6-осевой гироскоп',
+    pillars: [
+      {
+        title: 'Статическая рекомпиляция ARM64 → PPC32',
+        text: 'Оригинальный код Switch v1.0.0 переведён в 13 нативных модулей .rpx/.rpl (149 716 функций) без эмуляции — горячий модуль 1.22 МБ целиком живёт в L2 Core 1.',
+        image: './media/art/cutouts/acnh-tomnook.webp',
+      },
+      {
+        title: 'NVN → Latte GX2 и 4 299 шейдеров',
+        text: 'Офлайн-конвертация Maxwell → R600 (0 ошибок), MEM1 теневая карта 768×768 D16+HiZ, 5-ступенчатый DRS с Luma AMD CAS и нативный 720p интерфейс.',
+        image: './media/art/cutouts/acnh-nookphone.webp',
+      },
+      {
+        title: 'Живой остров, звук и WUP 3.6 ГБ',
+        text: 'Работают загрузка сохранений, 3D-титул, площадь с Томом Нуком, аэропорт и звук AX DSP 48 кГц. Идёт активная оптимизация CPU под 24–30 FPS и тест на железе.',
+      },
+    ],
+    gallery: [
+      { src: './media/art/gallery/acnh-port-title.webp', caption: 'Реальный запуск порта acnh-wiiu в Cemu 2.6 — 3D-титул Ver. 1.0.0 (TitleId 0005000021AC0001)' },
+      { src: './media/art/gallery/acnh-port-plaza.webp', caption: 'Реальный кадр Wave 9d — вечерняя площадь с Томом Нуком, костром, тенями и диалогом' },
+      { src: './media/art/acnh-scene.webp', caption: 'Островная площадь и жители (официальный кадр ACNH)' },
+      { src: './media/art/acnh-detail.webp', caption: 'Интерфейс NookPhone и сенсорное управление' },
+      { src: './media/art/gallery/acnh-02.webp', caption: 'Побережье острова и рыбалка' },
+      { src: './media/art/gallery/acnh-03.webp', caption: 'Верстак DIY и крафт предметов' },
+      { src: './media/art/gallery/acnh-04.webp', caption: 'Дом игрока и обустройство участка' },
+    ],
+    faq: [
+      {
+        q: 'Это эмулятор Switch на Wii U или нативный порт?',
+        a: 'Это нативная статическая рекомпиляция (AArch64 → C → PowerPC32 Big-Endian): оригинальные 149 716 функций ACNH v1.0.0 скомпилированы в нативные бинарники Cafe OS (acnh.rpx + 12 .rpl), 4 299 шейдеров переведены из Maxwell в Latte R600 GX2, а 62 самые тяжёлые функции переписаны на нативный C + Espresso Paired Singles SIMD.',
+      },
+      {
+        q: 'Что уже работает и почему сборка ещё не выложена в открытый доступ?',
+        a: 'Уже запускается 3D-остров, аэропорт (14.5–20.7 FPS), вечерняя площадь с Томом Нуком, сохранения и живой звук AX DSP 48 кГц; собран и криптопроверен WUP-установщик 3.6 ГБ. Сейчас идёт Wave 9: ускорение однопоточного AcnhMain на тяжёлом острове (сейчас 10–14 FPS в Cemu) и калибровочный прогон на физической Wii U.',
+      },
+      {
+        q: 'Есть ли отдельный экран NookPhone на Wii U GamePad?',
+        a: 'На текущем этапе GamePad работает в режиме аппаратного зеркалирования Off-TV Play (854×480 через даунскейлер Latte) с калиброванным тачскрином, 6-осевым гироскопом и вибрацией. Отдельный второй экран NookPhone пока не реализован.',
+      },
+    ],
+    developerCredit: 'Оригинальная игра: Nintendo EPD · Статическая рекомпиляция Switch → Wii U: Parhelio / Nikita56792',
+  },
 };
 
 export const appNotes: Record<string, string> = {
@@ -270,6 +325,33 @@ export interface PortUpdate {
 }
 
 export const updates: PortUpdate[] = [
+  {
+    slug: 'acnh-static-recomp-wave9',
+    game: 'acnh',
+    kind: 'Разработка Wave 9',
+    tag: 'R&D',
+    date: '2026-11-27',
+    title: 'Animal Crossing: New Horizons на Wii U — Wave 9: живой 3D-остров и 62 C HLE',
+    summary: 'Статическая рекомпиляция Switch v1.0.0 (149 716 функций, 4 299 шейдеров GX2, 10 378 тестов Unicorn PASS) вышла на 3D-остров и криптопроверенный WUP 3.6 ГБ.',
+    intro:
+      'В активной разработке и тестировании порт Animal Crossing: New Horizons для Wii U на базе собственного статического рекомпилятора AArch64 → PowerPC32.',
+    heroImage: './media/art/gallery/acnh-port-title.webp',
+    sections: [
+      {
+        heading: '149 716 функций и 62 нативных C HLE (0 ULP)',
+        body: 'Весь код ACNH v1.0.0 пересобран в 13 модулей Cafe OS с PGO-ядром acnh_hot_0.rpl (1.22 МБ в L2 кэше Core 1). 62 горячие функции (Tiers 1–5 с Paired Singles SIMD) прошли 10 378 / 10 378 дифференциальных тестов Unicorn (ARM64 vs C, 0 ULP).',
+      },
+      {
+        heading: 'Текущие замеры и ближайший шаг',
+        body: 'Загрузка острова держит 57–60 FPS, аэропорт — 14.5–20.7 FPS, 3D-остров с костром и тенями — 10–14 FPS (пик 24.3 FPS) с живым звуком AX DSP 48 кГц и нулевыми падениями. Сейчас идёт оптимизация AcnhMain (Wave 9) и подготовка прогона WUP (3.6 ГБ) на реальной Wii U.',
+      },
+    ],
+    changelog: [
+      '4 299 шейдеров Maxwell → Latte GX2 (0 ошибок), MEM1 теневая карта 768×768 D16+HiZ, 5-ступенчатый DRS + Luma AMD CAS',
+      'Wave 9 Tier-5 SIMD HLE (g3d, окклюзия, BCSV, ветер/листва, LiSPSM, nn::vfx) + 7 перф-хуков движка',
+      'RomFS 6.3 → 3.4 ГБ (61 597 архивов WLZ4 + линейные BC1–5) и криптопроверенный WUP 3.6 ГБ',
+    ],
+  },
   {
     slug: 'buckshot-build116-release',
     game: 'buckshot',

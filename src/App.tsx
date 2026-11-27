@@ -25,6 +25,8 @@ const REVEAL_SELECTOR = [
   '.br-pillar-box',
   '.br-raw-shot',
   '.sr-pillar-card',
+  '.ac-pillar-card',
+  '.ac-panel',
   '.sn-pillar-card',
   '.sn-glass-panel',
   '.mc-download-card',
@@ -143,7 +145,8 @@ export default function App() {
       (game?.slug === 'minecraft' ||
         game?.slug === 'buckshot' ||
         game?.slug === 'subnautica' ||
-        game?.slug === 'slime'));
+        game?.slug === 'slime' ||
+        game?.slug === 'acnh'));
   const isPersistentDark =
     isGameDetail && (game?.slug === 'buckshot' || game?.slug === 'subnautica');
 
